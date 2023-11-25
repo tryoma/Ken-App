@@ -1,0 +1,11 @@
+{
+  "extends": "next/core-web-vitals",
+  "overrides": [
+    {
+      "files": ["functions/**/*.js", "functions/**/*.ts"],
+      "rules": {
+        "next/no-html-link-for-pages": "off"
+      }
+    }
+  ]
+}
