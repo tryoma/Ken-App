@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import toast, { Toaster } from 'react-hot-toast';
-import { onMessageListener, requestForToken } from '../../../firebase';
+// import { onMessageListener, requestForToken } from '../../../firebase';
 
 const Notification = () => {
   const [notification, setNotification] = useState({ title: '', body: '' });
@@ -22,17 +22,17 @@ const Notification = () => {
     }
   }, [notification]);
 
-  requestForToken();
+  // requestForToken();
 
-  onMessageListener()
-    .then(payload => {
-      console.log('payload', payload);
-      setNotification({
-        title: 'test',
-        body: 'test',
-      });
-    })
-    .catch(err => console.log('failed: ', err));
+  // onMessageListener()
+  //   .then(payload => {
+  //     console.log('payload', payload);
+  //     setNotification({
+  //       title: 'test',
+  //       body: 'test',
+  //     });
+  //   })
+  //   .catch(err => console.log('failed: ', err));
 
   return <Toaster />;
 };
