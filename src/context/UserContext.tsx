@@ -52,7 +52,7 @@ export function UserProvider({ children }: UserProviderProps) {
         isLoading,
       }}
     >
-      {isLoading ? <div>Loading...</div> : children}
+      {children}
     </UserContext.Provider>
   );
 }

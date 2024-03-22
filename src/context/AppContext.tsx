@@ -84,7 +84,7 @@ export function AppProvider({ children }: AppProviderProps) {
         setSettingChangeFlag,
       }}
     >
-      {isLoading ? <div>Loading...</div> : children}
+      {children}
     </AppContext.Provider>
   );
 }

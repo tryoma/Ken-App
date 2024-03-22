@@ -1,5 +1,4 @@
 import { useAppContext } from '@/context/AppContext';
-import { useUserContext } from '@/context/UserContext';
 import { FetchAdviceRequestEntitiesService } from '@/service/useCase/crossDomain/fetch-advice-request-entities.service';
 import { ProcessAdviceRequestService } from '@/service/useCase/crossDomain/process-advice-request.service';
 import { AdviceRequest, TrainingRecord, User } from '@/type';
@@ -18,7 +17,6 @@ const AdviceRequestDetailModal = ({
   selectedAdviceRequest,
   onModalClose,
 }: Props) => {
-  const { user } = useUserContext();
   const { setSettingChangeFlag, settingChangeFlag } = useAppContext();
   const [selectTrainer, setSelectTrainer] = useState<User | null>(null);
   const [selectTrainingRecord, setSelectTrainingRecord] =
@@ -52,8 +50,7 @@ const AdviceRequestDetailModal = ({
   }
 
   const onRequestAdvice = async ({ focusPoint }: { focusPoint: string }) => {
-    if (!selectTrainer || !user) return;
-
+    if (!selectedAdviceRequest) return;
     const isOk = window.confirm(`アドバイスを申し込みますか？`);
     if (!isOk) return;
     const { isSuccess, shortage } = await ProcessAdviceRequestService.create(

@@ -14,7 +14,7 @@ const UserIconAndName = ({ user }: Props) => {
         width={20}
         height={20}
         alt="プロフィール画像"
-        className="rounded-full w-2/12"
+        className="rounded-full"
       />
       <div className="ml-1 truncate w-5/12 m-auto">{user.name ?? '未設定'}</div>
       <span className="ml-2 text-xs m-auto w-5/12">
