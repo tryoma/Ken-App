@@ -1,9 +1,9 @@
 import { ExtendedTrainingRecord, TrainingRecordFormValues } from '@/type';
-import { MouseEvent } from 'react';
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { TrainingRecordSchema } from '@/validationSchema';
 import { getDateString } from '@/util/logic';
+import DefaultModal from './DefaultModal';
 
 interface Props {
   trainingRecord: ExtendedTrainingRecord;
@@ -36,18 +36,9 @@ const EditTrainingRecordModal = ({
     resolver: yupResolver(TrainingRecordSchema),
   });
 
-  const handleBackgroundClick = (e: MouseEvent<HTMLDivElement>) => {
-    if (e.target === e.currentTarget) {
-      onEditRecordClose();
-    }
-  };
-
   return (
-    <div
-      className="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full flex items-center justify-center p-4 z-[10000]"
-      onClick={handleBackgroundClick}
-    >
-      <div className="relative bg-white p-5 border shadow-lg rounded-md w-full md:w-3/5 max-h-full overflow-y-auto max-w-screen-sm">
+    <DefaultModal onCloseModal={onEditRecordClose}>
+      <>
         <div className="flex justify-between items-center">
           <h3 className="text-xl leading-6 font-bold text-gray-900 mb-3">
             新しい稽古記録の作成
@@ -167,8 +158,8 @@ const EditTrainingRecordModal = ({
             編集
           </button>
         </form>
-      </div>
-    </div>
+      </>
+    </DefaultModal>
   );
 };
 

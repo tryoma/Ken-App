@@ -2,11 +2,12 @@ import { useAppContext } from '@/context/AppContext';
 import { FetchAdviceRequestEntitiesService } from '@/service/useCase/crossDomain/fetch-advice-request-entities.service';
 import { ProcessAdviceRequestService } from '@/service/useCase/crossDomain/process-advice-request.service';
 import { AdviceRequest, TrainingRecord, User } from '@/type';
-import { extractYoutubeVideoId } from '@/util/logic';
 import { RequestFormSchema } from '@/validationSchema';
 import { yupResolver } from '@hookform/resolvers/yup';
 import React, { MouseEvent, useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
+import TrainingRecordVideo from './parts/TrainingRecordVideo';
+import DefaultModal from './DefaultModal';
 
 interface Props {
   selectedAdviceRequest: AdviceRequest | null;
@@ -74,78 +75,44 @@ const AdviceRequestDetailModal = ({
   };
 
   return (
-    <div
-      className="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full flex items-center justify-center p-4 z-[10000]"
-      onClick={handleBackgroundClick}
-    >
-      <div className="relative bg-white p-5 border shadow-lg rounded-md w-full md:w-3/5 max-h-full overflow-y-auto max-w-screen-sm">
-        <div className="">
-          {selectTrainer && (
-            <div className="text-center">
-              <div className="text-xl">{selectTrainer.name} さんへの依頼</div>
-              <div className="text-xs text-gray-500">
-                (※{selectTrainer.requestPoint} P必要)
-              </div>
+    <DefaultModal onCloseModal={onModalClose}>
+      <div className="">
+        {selectTrainer && (
+          <div className="text-center">
+            <div className="text-xl">{selectTrainer.name} さんへの依頼</div>
+            <div className="text-xs text-gray-500">
+              (※{selectTrainer.requestPoint} P必要)
             </div>
-          )}
-          {selectTrainingRecord && (
-            <>
-              <div className="">
-                {selectTrainingRecord.videoUrl ? (
-                  // selectedRecordにvideoUrlがあれば、その動画を表示
-                  <video className="w-full h-52" controls>
-                    <source
-                      src={selectTrainingRecord.videoUrl}
-                      type="video/mp4"
-                    />
-                  </video>
-                ) : (
-                  <iframe
-                    src={`https://www.youtube.com/embed/${extractYoutubeVideoId(
-                      selectTrainingRecord.youtubeUrl || ''
-                    )}`}
-                    title="YouTube video player"
-                    className="w-full h-80"
-                    allowFullScreen
-                  ></iframe>
-                )}
-              </div>
-
-              <div className="items-center my-2">
-                <h3 className="text-xl leading-6 font-bold text-gray-900">
-                  {selectTrainingRecord.title}
-                </h3>
-              </div>
-            </>
-          )}
-          <div className="mb-4 w-full text-left">
-            <label
-              htmlFor="focusPoint"
-              className="block text-gray-700 text-sm font-bold mb-2"
-            >
-              注目してほしいポイント
-            </label>
-            <textarea
-              id="focusPoint"
-              rows={3}
-              {...register('focusPoint')}
-              className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-            />
-            {errors.focusPoint && (
-              <span className="text-red-500 text-xs italic">
-                {errors.focusPoint.message}
-              </span>
-            )}
           </div>
-          <button
-            onClick={handleSubmit(onRequestAdvice)}
-            className="py-2 px-4 bg-blue-500 text-white rounded"
+        )}
+        <TrainingRecordVideo trainingRecord={selectTrainingRecord} />
+        <div className="mb-4 w-full text-left">
+          <label
+            htmlFor="focusPoint"
+            className="block text-gray-700 text-sm font-bold mb-2"
           >
-            申込
-          </button>
+            注目してほしいポイント
+          </label>
+          <textarea
+            id="focusPoint"
+            rows={3}
+            {...register('focusPoint')}
+            className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+          />
+          {errors.focusPoint && (
+            <span className="text-red-500 text-xs italic">
+              {errors.focusPoint.message}
+            </span>
+          )}
         </div>
+        <button
+          onClick={handleSubmit(onRequestAdvice)}
+          className="py-2 px-4 bg-blue-500 text-white rounded"
+        >
+          申込
+        </button>
       </div>
-    </div>
+    </DefaultModal>
   );
 };
 

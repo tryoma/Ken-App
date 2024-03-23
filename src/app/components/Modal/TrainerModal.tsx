@@ -1,7 +1,7 @@
 import Image from 'next/image';
-import { MouseEvent } from 'react';
 import { User } from '@/type';
 import { imageUrl } from '@/util/logic';
+import DefaultModal from './DefaultModal';
 
 interface Props {
   trainer: User | null;
@@ -24,18 +24,9 @@ const TrainerModal = ({ trainer, onModalClose, onRequest }: Props) => {
     }
   };
 
-  const handleBackgroundClick = (e: MouseEvent<HTMLDivElement>) => {
-    if (e.target === e.currentTarget) {
-      onModalClose();
-    }
-  };
-
   return (
-    <div
-      className="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full flex items-center justify-center p-4 z-[10000]"
-      onClick={handleBackgroundClick}
-    >
-      <div className="relative bg-white p-5 border shadow-lg rounded-md w-full md:w-2/5 max-h-full overflow-y-auto max-w-screen-sm text-center">
+    <DefaultModal onCloseModal={onModalClose}>
+      <div className="text-center">
         <div className="flex flex-col items-center p-3">
           <Image
             src={imageUrl(trainer.imageUrl)}
@@ -57,7 +48,7 @@ const TrainerModal = ({ trainer, onModalClose, onRequest }: Props) => {
           依頼する
         </button>
       </div>
-    </div>
+    </DefaultModal>
   );
 };
 
