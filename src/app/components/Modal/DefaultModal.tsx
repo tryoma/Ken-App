@@ -5,11 +5,11 @@ interface Props {
   onCloseModal: () => void;
 }
 
-
 const DefaultModal = ({ children, onCloseModal }: Props) => {
   const onModalClose = (e: MouseEvent<HTMLDivElement>) => {
-    e.stopPropagation();
-    onCloseModal();
+    if (e.target === e.currentTarget) {
+      onCloseModal();
+    }
   };
 
   return (
