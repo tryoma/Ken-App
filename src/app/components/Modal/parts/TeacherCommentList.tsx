@@ -61,10 +61,10 @@ const TeacherCommentList = ({ comments }: Props) => {
                   isInclude(comment.id) ? '' : 'hidden'
                 }`}
               >
-                <div className="px-3">
+                <div className="px-3 break-words">
                   <p> Q. {comment.focusPoint}</p>
                 </div>
-                <div className="p-3 text-blue-500">
+                <div className="p-3 text-blue-500 break-words">
                   <p> A. {comment.text}</p>
                 </div>
               </div>

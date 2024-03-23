@@ -12,9 +12,8 @@ export const ExecTrainerCommentService = {
 
     await CommentService.createTrainerComment(adviceRequest, comment);
 
-    const getPoint = adviceRequest.requestPoint
-      ? adviceRequest.requestPoint * 0.8
-      : 0;
+    const getPoint = adviceRequest.paymentPoint || 0;
+
     const trainerUser = await UserService.fetchUser(
       adviceRequest.trainerUserId
     );
@@ -40,7 +39,6 @@ export const ExecTrainerCommentService = {
 
     const newAdviceRequest: Partial<AdviceRequest> = {
       status: 'accepted',
-      paymentPoint: getPoint,
       paymentStatus: 'finished',
     };
 

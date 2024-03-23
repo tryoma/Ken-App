@@ -29,10 +29,13 @@ export const ProcessAdviceRequestService = {
       };
     }
 
+    const paymentPoint = trainerUser.point ? trainerUser.point * 0.8 : 0;
+
     await UserService.updateUser(user.id, { point: diff });
     await AdviceRequestService.updateAdviceRequest(adviceRequestId, {
       status: 'requested',
       requestPoint: trainerUser.requestPoint,
+      paymentPoint,
       focusPoint,
       paymentStatus: 'pending',
     });

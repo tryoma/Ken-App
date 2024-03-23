@@ -62,7 +62,7 @@ const Register = () => {
     <div className="h-screen flex flex-col items-center justify-center">
       <form
         onSubmit={handleSubmit(onSubmit)}
-        className="bg-white p-8 rounded-lg shadow-md w-96"
+        className="bg-white p-6 rounded-lg shadow-md w-96"
       >
         <h1 className="mb-4 text-2xl text-gray-700 font-medium">新規登録</h1>
         <div className="mb-4">

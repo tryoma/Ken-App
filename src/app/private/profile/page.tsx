@@ -4,7 +4,7 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { useEffect, useRef, useState } from 'react';
 import { useForm } from 'react-hook-form';
-import { storage } from '../../../../firebase';
+import { auth, storage } from '../../../../firebase';
 import { useAppContext } from '@/context/AppContext';
 import { getDownloadURL, ref, uploadBytes } from 'firebase/storage';
 import { Experience, Rank, User } from '@/type';
@@ -16,9 +16,12 @@ import {
 import { yupResolver } from '@hookform/resolvers/yup';
 import { UserSchema } from '@/validationSchema';
 import { UserService } from '@/service/useCase/user.service';
+import { verifyBeforeUpdateEmail } from 'firebase/auth';
+import { FirebaseError } from 'firebase/app';
 
 const Profile = () => {
-  const { userId, settingChangeFlag, setSettingChangeFlag } = useAppContext();
+  const { userId, settingChangeFlag, setSettingChangeFlag, user } =
+    useAppContext();
   const [loading, setLoading] = useState<boolean>(true);
   const snackbarRef = useRef<SnackbarHandler>(null);
   const openSnackbar = (message: string) => {
@@ -80,6 +83,30 @@ const Profile = () => {
     setValue('imageUrl', fileURL);
   };
 
+  const handleChangeEmail = async () => {
+    if (!user) return;
+    const ok = confirm('メールアドレスを変更しますか？');
+    if (!ok) return;
+    const newEmail = prompt('新しいメールアドレスを入力してください');
+    if (!newEmail) return;
+    try {
+      await verifyBeforeUpdateEmail(user, newEmail);
+      alert('確認メールを送信しました');
+      auth.signOut();
+    } catch (error) {
+      if ((error as FirebaseError).code === 'auth/requires-recent-login') {
+        // ユーザーに再ログインを促す
+        alert(
+          'セキュリティ上の理由から、操作を続行するには再ログインが必要です。そのため、一度ログアウトします。再度、ログイン後、再度メールアドレスの変更処理を行ってください。'
+        );
+        auth.signOut();
+      } else {
+        // その他のエラー処理
+        console.error('メールアドレスの変更中にエラーが発生しました:', error);
+      }
+    }
+  };
+
   if (loading) return <p>Loading...</p>;
 
   return (
@@ -117,6 +144,21 @@ const Profile = () => {
         </div>
         <div className="bg-white shadow-md rounded p-4">
           <div className="mb-4">
+            <label
+              className="block text-gray-700 text-sm font-bold mb-2"
+              htmlFor="name"
+            >
+              メールアドレス
+            </label>
+            <p className="w-full pb-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
+              {user?.email}{' '}
+              <button
+                className="ml-1 text-sm bg-blue-500 text-white px-3 py-1 rounded"
+                onClick={handleChangeEmail}
+              >
+                変更
+              </button>
+            </p>
             <label
               className="block text-gray-700 text-sm font-bold mb-2"
               htmlFor="name"

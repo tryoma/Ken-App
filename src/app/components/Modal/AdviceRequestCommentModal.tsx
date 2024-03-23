@@ -19,6 +19,7 @@ const AdviceRequestCommentModal = ({
   onClose,
 }: Props) => {
   const { setSettingChangeFlag, settingChangeFlag } = useAppContext();
+  const [selectUser, setSelectUser] = useState<User | null>(null);
   const [selectTrainer, setSelectTrainer] = useState<User | null>(null);
   const [selectTrainingRecord, setSelectTrainingRecord] =
     useState<TrainingRecord | null>(null);
@@ -38,9 +39,10 @@ const AdviceRequestCommentModal = ({
   useEffect(() => {
     const fetchData = async () => {
       if (!selectedAdviceRequest) return;
-      const { user, trainingRecord } =
+      const { user, trainerUser, trainingRecord } =
         await FetchAdviceRequestEntitiesService.fetch(selectedAdviceRequest);
-      setSelectTrainer(user);
+      setSelectUser(user);
+      setSelectTrainer(trainerUser);
       setSelectTrainingRecord(trainingRecord);
     };
     fetchData();
@@ -62,9 +64,14 @@ const AdviceRequestCommentModal = ({
 
   return (
     <DefaultModal onCloseModal={onClose}>
-      <div className="flex flex-col items-center">
-        {selectTrainer && (
-          <div className="text-xl">{selectTrainer.name}さんからの依頼</div>
+      <div className="flex flex-col">
+        {selectUser && (
+          <div className="text-center">
+            <div className="text-xl">{selectUser.name} さんからの依頼</div>
+            <div className="text-xs text-gray-500">
+              (※{selectedAdviceRequest.paymentPoint} P獲得)
+            </div>
+          </div>
         )}
         <TrainingRecordVideo trainingRecord={selectTrainingRecord} />
         <div className="mb-4 w-full text-left">

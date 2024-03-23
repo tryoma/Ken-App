@@ -70,7 +70,7 @@ const Login = () => {
     <div className="h-screen flex flex-col items-center justify-center">
       <form
         onSubmit={handleSubmit(onSubmit)}
-        className="bg-white p-8 rounded-lg shadow-md w-96"
+        className="bg-white p-6 rounded-lg shadow-md w-96"
       >
         <h1 className="mb-4 text-2xl text-gray-700 font-medium">ログイン</h1>
         <div className="mb-4">
@@ -113,6 +113,17 @@ const Login = () => {
               {errors.password.message}
             </span>
           )}
+          <div className="">
+            <span className="text-gray-600 text-sm">
+              パスワードを忘れた方は
+            </span>
+            <Link
+              href={'/auth/reset-pass'}
+              className="text-blue-500 text-sm font-bold ml-1 hover:text-blue-700"
+            >
+              こちら
+            </Link>
+          </div>
         </div>
 
         <div className="flex justify-end">
