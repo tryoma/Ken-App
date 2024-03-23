@@ -67,7 +67,7 @@ const AdviceRequestCommentModal = ({
 
   return (
     <div
-      className="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full flex items-center justify-center p-4"
+      className="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full flex items-center justify-center p-4 z-[10000]"
       onClick={handleBackgroundClick}
     >
       <div className="relative bg-white p-5 border shadow-lg rounded-md w-full md:w-2/5 max-h-full overflow-y-auto max-w-screen-sm text-center">

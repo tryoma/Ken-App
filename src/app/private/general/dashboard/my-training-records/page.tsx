@@ -15,6 +15,7 @@ import { AdviceRequestService } from '@/service/useCase/advice-request.service';
 import EditTrainingRecordModal from '@/app/components/Modal/EditTrainingRecordModal';
 import TrainingRecordCardList from '@/app/components/trainingRecord/TrainingRecordCardList';
 import useTrainingRecords from '@/app/hook/useTrainingRecords';
+import UserIconAndNameWithUserId from '@/app/components/Modal/parts/UserIconAndNameWithUserId';
 
 const MyTrainingRecords = () => {
   const router = useRouter();
@@ -149,7 +150,14 @@ const MyTrainingRecords = () => {
               取消
             </button>
           </p>
-          <p>トレーナー名: {preparingAdviceRequest.trainerUserId}</p>
+          <div className="flex">
+            <p className="mr-2">トレーナー:</p>
+            <span className="font-semibold transition duration-100 md:text-lg">
+              <UserIconAndNameWithUserId
+                userId={preparingAdviceRequest.trainerUserId}
+              />
+            </span>
+          </div>
           <p>依頼する動画を選択してください。</p>
         </div>
       )}

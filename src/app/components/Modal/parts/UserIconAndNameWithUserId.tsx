@@ -5,13 +5,14 @@ import Image from 'next/image';
 import { useEffect, useState } from 'react';
 
 interface Props {
-  userId: string;
+  userId: string | null | undefined;
 }
 
 const UserIconAndNameWithUserId = ({ userId }: Props) => {
   const [user, setUser] = useState<User | null>(null);
 
   useEffect(() => {
+    if (!userId) return;
     const fetchData = async () => {
       const user = await UserService.fetchUser(userId);
       setUser(user);
@@ -24,8 +25,8 @@ const UserIconAndNameWithUserId = ({ userId }: Props) => {
         <Image
           src={imageUrl(user.imageUrl)}
           alt="プロフィール画像"
-          width={20}
-          height={20}
+          width={100}
+          height={100}
           className="rounded-full w-2/12"
         />
         <div className="ml-1 truncate w-10/12 m-auto">

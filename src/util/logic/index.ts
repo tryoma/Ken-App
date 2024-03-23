@@ -56,7 +56,8 @@ export const getDateString = (target: Date = new Date()) => {
   return `${year}-${month}-${day}`;
 };
 
-export const formatTimeAgo = (date: Date): string => {
+export const formatTimeAgo = (timestamp: { toDate: () => Date }): string => {
+  const date = timestamp.toDate(); // Timestamp を Date に変換
   const now = new Date();
   const diffMs = now.getTime() - date.getTime();
 

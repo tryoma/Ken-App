@@ -21,7 +21,7 @@ const TeacherCommentList = ({ comments }: Props) => {
 
   return comments.length > 0 ? (
     <div className="">
-      <h2 className="text-xl font-bold mb-3">先生のコメント</h2>
+      <h2 className="text-xl font-bold mb-3">トレーナーのコメント</h2>
       {comments.map(comment => (
         <div key={comment.id} className="mx-auto max-w-screen-2xl px-2">
           <div className="mx-auto flex max-w-screen-sm flex-col border-t">

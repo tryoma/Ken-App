@@ -75,22 +75,21 @@ const AdviceRequestDetailModal = ({
 
   return (
     <div
-      className="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full flex items-center justify-center p-4"
+      className="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full flex items-center justify-center p-4 z-[10000]"
       onClick={handleBackgroundClick}
     >
-      <div className="relative bg-white p-5 border shadow-lg rounded-md w-full md:w-2/5 max-h-full overflow-y-auto max-w-screen-sm text-center">
-        <div className="flex flex-col items-center">
+      <div className="relative bg-white p-5 border shadow-lg rounded-md w-full md:w-3/5 max-h-full overflow-y-auto max-w-screen-sm">
+        <div className="">
           {selectTrainer && (
-            <>
+            <div className="text-center">
               <div className="text-xl">{selectTrainer.name} さんへの依頼</div>
               <div className="text-xs text-gray-500">
                 (※{selectTrainer.requestPoint} P必要)
               </div>
-            </>
+            </div>
           )}
           {selectTrainingRecord && (
-            <div className="my-2 w-full">
-              <div>{selectTrainingRecord.title}</div>
+            <>
               <div className="">
                 {selectTrainingRecord.videoUrl ? (
                   // selectedRecordにvideoUrlがあれば、その動画を表示
@@ -111,7 +110,13 @@ const AdviceRequestDetailModal = ({
                   ></iframe>
                 )}
               </div>
-            </div>
+
+              <div className="items-center my-2">
+                <h3 className="text-xl leading-6 font-bold text-gray-900">
+                  {selectTrainingRecord.title}
+                </h3>
+              </div>
+            </>
           )}
           <div className="mb-4 w-full text-left">
             <label

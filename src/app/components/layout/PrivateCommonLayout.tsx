@@ -6,7 +6,7 @@ const PrivateCommonLayout = ({ children }: { children: ReactNode }) => {
   return (
     <div className="flex flex-col min-h-screen">
       <Header />
-      <main className="flex-grow">{children}</main>
+      <main className="flex-grow overflow-auto pt-10">{children}</main>
       <Footer />
     </div>
   );

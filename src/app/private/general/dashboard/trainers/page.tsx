@@ -9,6 +9,7 @@ import TrainerCardList from '@/app/components/trainer/TrainerCardList';
 import { UserService } from '@/service/useCase/user.service';
 import { FetchLatestAdviceRequestEntitiesService } from '@/service/useCase/crossDomain/fetch-latest-advice-request-entities.service';
 import { AdviceRequestService } from '@/service/useCase/advice-request.service';
+import TrainingRecordTitle from '@/app/components/Modal/parts/TrainingRecordTitle';
 
 const Trainers = () => {
   const router = useRouter();
@@ -83,6 +84,14 @@ const Trainers = () => {
               取消
             </button>
           </p>
+          <div className="flex">
+            <p className="mr-2">選択中の動画タイトル:</p>
+            <span className="">
+              <TrainingRecordTitle
+                trainingRecordId={preparingAdviceRequest.trainingRecordId}
+              />
+            </span>
+          </div>
           <p>依頼するユーザーを選択してください。</p>
         </div>
       )}

@@ -28,7 +28,7 @@ const TrainingRecordDetailModal = ({
   isCanEdit = false,
   isCanDelete = false,
 }: Props) => {
-  const { title, withWho, memo, date, watchCount } = trainingRecord;
+  const { title, withWho, memo, createdAt, watchCount } = trainingRecord;
   const { userId } = useAppContext();
   const [isFavorite, setIsFavorite] = useState<boolean>(
     trainingRecord.isFavorite ?? false
@@ -113,7 +113,7 @@ const TrainingRecordDetailModal = ({
 
   return (
     <div
-      className="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full flex items-center justify-center p-4"
+      className="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full flex items-center justify-center p-4 z-[10000]"
       onClick={handleBackgroundClick}
     >
       <div className="relative bg-white p-5 border shadow-lg rounded-md w-full md:w-3/5 max-h-full overflow-y-auto max-w-screen-sm">
@@ -138,7 +138,8 @@ const TrainingRecordDetailModal = ({
           <h3 className="text-xl leading-6 font-bold text-gray-900">{title}</h3>
           <div className="rounded bg-gray-200 p-2 mt-1 text-sm text-gray-500">
             <p className="font-bold">
-              {watchCount.toLocaleString()}回視聴 {date && formatTimeAgo(date)}
+              {watchCount.toLocaleString()}回視聴{' '}
+              {createdAt && formatTimeAgo(createdAt)}
             </p>
             {withWho && <p>{withWho}との稽古</p>}
             <p>{memo}</p>

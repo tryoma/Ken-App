@@ -89,7 +89,7 @@ const Header = () => {
   const allMenues = [...defaultMenues, ...settingMenues];
 
   return (
-    <header className="bg-white">
+    <header className="bg-white fixed top-0 w-full z-[1000]">
       <nav
         className="mx-auto flex max-w-7xl items-center justify-between p-3 lg:px-8"
         aria-label="Global"

@@ -1,4 +1,5 @@
 import { Experience, Rank, User } from '@/type';
+import { getDateString } from '@/util/logic';
 import * as yup from 'yup';
 
 // const MAX_FILE_SIZE = 102400;
@@ -48,8 +49,9 @@ export const TrainingRecordSchema = yup.object().shape({
       // valueがnullの場合は検証をパスさせる
       if (!value) return true;
 
+      const today = getDateString();
       // valueが今日の日付かそれ以前かを検証
-      return value <= new Date().toISOString().slice(0, 10);
+      return value <= today;
     }),
   withWho: yup
     .string()

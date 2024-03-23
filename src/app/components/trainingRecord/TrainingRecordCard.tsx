@@ -17,7 +17,7 @@ const TrainingRecordCard = ({
   const [trainingRecordUser, setTrainingRecordUser] = useState<User | null>(
     null
   );
-  const { youtubeUrl, videoUrl, title, date, watchCount } = trainingRecord;
+  const { youtubeUrl, videoUrl, title, createdAt, watchCount } = trainingRecord;
 
   useEffect(() => {
     const fetchUser = async () => {
@@ -55,7 +55,7 @@ const TrainingRecordCard = ({
             width={100}
             height={100}
             alt="アイコン"
-            className="rounded-full border-solid border border-gray-400 p-1 bg-white"
+            className="rounded-full border-solid border border-gray-400 bg-white"
           />
         </div>
         <div className="ml-1 w-5/6 ">
@@ -63,8 +63,8 @@ const TrainingRecordCard = ({
           <div className="mt-0.5">
             <p className="text-xs text-gray-500">{trainingRecordUser?.name}</p>
             <div className="flex">
-              {date && (
-                <p className="text-xs text-gray-500">{formatTimeAgo(date)}</p>
+              {createdAt && (
+                <p className="text-xs text-gray-500">{formatTimeAgo(createdAt)}</p>
               )}
               <p className="text-xs text-gray-500 pl-1">{watchCount.toLocaleString()}回視聴</p>
             </div>
