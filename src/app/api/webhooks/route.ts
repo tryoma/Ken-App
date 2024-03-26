@@ -1,11 +1,15 @@
+import Stripe from 'stripe';
 import { stripe } from '@/app/stripe';
 import { NextResponse } from 'next/server';
+import { headers } from 'next/headers';
 import { PointHistory } from '@/type';
 import { UserService } from '@/service/useCase/user.service';
 import { PointHistoryService } from '@/service/useCase/point-history.service';
 
 export async function POST(request: Request) {
-  const signature = request.headers.get('stripe-signature');
+  const body = await request.text();
+  const signature = headers().get('Stripe-Signature') as string;
+  const secret = process.env.STRIPE_WEBHOOK_SECRET || '';
   if (!signature) {
     return NextResponse.json(
       {
@@ -16,13 +20,9 @@ export async function POST(request: Request) {
       }
     );
   }
+  let event: Stripe.Event;
   try {
-    const body = await request.arrayBuffer();
-    const event = stripe.webhooks.constructEvent(
-      Buffer.from(body),
-      signature,
-      process.env.STRIPE_WEBHOOK_SECRET as string
-    );
+    event = stripe.webhooks.constructEvent(body, signature, secret);
     if (
       event.type !== 'checkout.session.completed' &&
       event.type !== 'checkout.session.async_payment_succeeded'

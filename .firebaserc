@@ -1,5 +1,7 @@
 {
   "projects": {
-    "default": "ken-app-5926d"
+    "default": "ken-app-5926d",
+    "dev": "ken-app-5926d",
+    "prod": "ken-app-prod"
   }
 }

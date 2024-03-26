@@ -16,8 +16,8 @@ export async function POST(req: Request) {
       },
     ],
     mode: 'payment',
-    success_url: 'http://localhost:3000/private/point?status=success',
-    cancel_url: 'http://localhost:3000/private/point?status=failure',
+    success_url: `${process.env.NEXT_PUBLIC_API_BASE_URL}/private/point?status=success`,
+    cancel_url: `${process.env.NEXT_PUBLIC_API_BASE_URL}/private/point?status=failure`,
     metadata: {
       userId: requestBodyJSON.user_id,
       point: requestBodyJSON.point,

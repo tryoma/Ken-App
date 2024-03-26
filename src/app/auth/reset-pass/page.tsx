@@ -24,9 +24,9 @@ const ResetPass = () => {
 
   const actionCodeSettings = {
     // パスワード再設定後のリダイレクト URL
-    url: 'http://localhost:3000/auth/login',
+    url: `${process.env.NEXT_PUBLIC_API_BASE_URL}/auth/login`,
     handleCodeInApp: false,
-  }
+  };
 
   const onSubmit: SubmitHandler<Inputs> = async data => {
     await sendPasswordResetEmail(auth, data.email, actionCodeSettings)
@@ -51,7 +51,9 @@ const ResetPass = () => {
         onSubmit={handleSubmit(onSubmit)}
         className="bg-white p-6 rounded-lg shadow-md w-96"
       >
-        <h1 className="mb-4 text-2xl text-gray-700 font-medium">パスワード変更</h1>
+        <h1 className="mb-4 text-2xl text-gray-700 font-medium">
+          パスワード変更
+        </h1>
         <div className="mb-4">
           <label className="block text-sm font-medium text-gray-600">
             Email
