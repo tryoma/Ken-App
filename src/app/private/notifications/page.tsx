@@ -12,16 +12,15 @@ const Notifications = () => {
     []
   );
 
-  const fetchNotification = async () => {
-    if (!userId) return;
-    const { notificationsWithReadFlag } =
-      await NotificationService.fetchAllNotifications(userId);
-    setNotifications(notificationsWithReadFlag);
-  };
-
   useEffect(() => {
+    const fetchNotification = async () => {
+      if (!userId) return;
+      const { notificationsWithReadFlag } =
+        await NotificationService.fetchAllNotifications(userId);
+      setNotifications(notificationsWithReadFlag);
+    };
     fetchNotification();
-  }, []);
+  }, [userId]);
 
   const color = (type: string = '') => {
     switch (type) {
@@ -37,8 +36,14 @@ const Notifications = () => {
   const handleMarkAsRead = async (id: string) => {
     if (!userId) return;
     await ReadNotificationService.createReadNotification(userId, id);
+    setNotifications(
+      notifications.map(notification =>
+        notification.id === id
+          ? { ...notification, isRead: true }
+          : notification
+      )
+    );
     setSettingChangeFlag(!settingChangeFlag);
-    fetchNotification();
   };
 
   return (
