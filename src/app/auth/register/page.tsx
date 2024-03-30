@@ -24,7 +24,7 @@ const Register = () => {
   } = useForm<Inputs>();
 
   const onSubmit: SubmitHandler<Inputs> = async data => {
-    auth.signOut();
+    await auth.signOut();
     await createUserWithEmailAndPassword(auth, data.email, data.password)
       .then(async userCredential => {
         const user = userCredential.user;
