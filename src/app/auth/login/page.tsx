@@ -28,7 +28,6 @@ const Login = () => {
   } = useForm<Inputs>();
 
   const onGoogleLogin = async () => {
-    await auth.signOut();
     await signInWithPopup(auth, provider)
       .then(async result => {
         const details = getAdditionalUserInfo(result);
