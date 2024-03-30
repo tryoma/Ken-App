@@ -48,6 +48,7 @@ const Login = () => {
         router.push('/private/general/dashboard');
       })
       .catch(error => {
+        console.log(error.code, error.message);
         alert('ログインに失敗しました。');
       });
   };
