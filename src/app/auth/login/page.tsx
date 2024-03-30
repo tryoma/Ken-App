@@ -28,6 +28,7 @@ const Login = () => {
   } = useForm<Inputs>();
 
   const onGoogleLogin = async () => {
+    auth.signOut();
     await signInWithPopup(auth, provider)
       .then(async result => {
         const details = getAdditionalUserInfo(result);
@@ -53,6 +54,7 @@ const Login = () => {
   };
 
   const onSubmit: SubmitHandler<Inputs> = async data => {
+    auth.signOut();
     await signInWithEmailAndPassword(auth, data.email, data.password)
       .then(_ => {
         router.push('/private/general/dashboard');

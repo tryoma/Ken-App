@@ -32,8 +32,5 @@ export async function GET(req: Request) {
     })
   );
 
-  return NextResponse.json(
-    { data: productsWithPrices },
-    { status: 200 }
-  );
+  return NextResponse.json({ data: productsWithPrices }, { status: 200 });
 }
