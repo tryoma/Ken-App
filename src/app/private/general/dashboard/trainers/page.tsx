@@ -96,7 +96,11 @@ const Trainers = () => {
         </div>
       )}
 
-      <TrainerCardList trainerList={trainers} onSelect={handleTrainerClick} />
+      {trainers.length === 0 ? (
+        <p>トレーナーが見つかりませんでした。</p>
+      ) : (
+        <TrainerCardList trainerList={trainers} onSelect={handleTrainerClick} />
+      )}
 
       {selectedTrainer && userId && (
         <TrainerModal
