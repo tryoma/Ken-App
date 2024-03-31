@@ -11,7 +11,7 @@ export default function PrivateLayout({
 }) {
   return (
     <AppProvider>
-      {/* <Notification /> */}
+      <Notification />
       <UserProvider>
         <PrivateCommonLayout>{children}</PrivateCommonLayout>
       </UserProvider>

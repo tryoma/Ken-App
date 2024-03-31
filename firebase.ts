@@ -13,39 +13,9 @@ const firebaseConfig = {
   appId: process.env.NEXT_PUBLIC_FIREBASE_APP_ID,
 };
 
-const app = initializeApp(firebaseConfig);
+export const app = initializeApp(firebaseConfig);
 export const db = getFirestore(app);
 export const auth = getAuth(app);
 export const storage = getStorage(app);
 
 export const provider = new GoogleAuthProvider();
-// const messaging = getMessaging(app);
-
-// export const requestForToken = () => {
-//   return getToken(messaging, {
-//     vapidKey:
-//       'BMohCck7syll1gEZmQV3P0ixfx2zYhVet6lbkzd15MkEyOQYOLndiW45dKXrMpILHRY9MPGBERv15-zZeTnY3Ns',
-//   })
-//     .then(currentToken => {
-//       if (currentToken) {
-//         console.log('current token for client: ', currentToken);
-//         // Perform any other neccessary action with the token
-//       } else {
-//         // Show permission request UI
-//         console.log(
-//           'No registration token available. Request permission to generate one.'
-//         );
-//       }
-//     })
-//     .catch(err => {
-//       console.log('An error occurred while retrieving token. ', err);
-//     });
-// };
-
-// export const onMessageListener = () =>
-//   new Promise(resolve => {
-//     onMessage(messaging, payload => {
-//       console.log('payload', payload);
-//       resolve(payload);
-//     });
-//   });
