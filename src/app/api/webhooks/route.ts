@@ -5,6 +5,7 @@ import { headers } from 'next/headers';
 import { PointHistory } from '@/type';
 import { UserService } from '@/service/useCase/user.service';
 import { PointHistoryService } from '@/service/useCase/point-history.service';
+import logger from '../../../../logger';
 
 export async function POST(request: Request) {
   const body = await request.text();
@@ -35,6 +36,7 @@ export async function POST(request: Request) {
      * 支払いが完全に完了している場合のみ処理する
      **/
     if (event.data.object.payment_status === 'paid') {
+      logger.info(`Stripe webhook start! ${JSON.stringify(event, null, 2)}`);
       const item = await stripe.checkout.sessions.listLineItems(
         event.data.object.id
       );
@@ -42,6 +44,11 @@ export async function POST(request: Request) {
       const point = event.data.object.metadata?.point;
 
       if (!userId || !point) {
+        logger.error('ユーザーIDまたはポイントが取得できませんでした', {
+          userId,
+          point,
+          dataObject: event.data.object,
+        });
         return NextResponse.json({
           message: `Hello Stripe end!`,
         });
@@ -50,6 +57,11 @@ export async function POST(request: Request) {
       const user = await UserService.fetchUser(userId);
 
       if (!user) {
+        logger.error('ユーザーが見つかりませんでした', {
+          userId,
+          point,
+          dataObject: event.data.object,
+        });
         return NextResponse.json({
           message: `Hello Stripe end!`,
         });
@@ -66,7 +78,7 @@ export async function POST(request: Request) {
       };
       await PointHistoryService.createPointHistory(pointHistory);
 
-      console.log('決済完了');
+      logger.info('決済終了');
       /**
        * カートの中身の情報を利用して、発送業務などのシステムを呼び出す
        **/
@@ -78,7 +90,7 @@ export async function POST(request: Request) {
     const errorMessage = `⚠️  Webhook signature verification failed. ${
       (err as Error).message
     }`;
-    console.log(errorMessage);
+    logger.error(errorMessage);
     return new Response(errorMessage, {
       status: 400,
     });

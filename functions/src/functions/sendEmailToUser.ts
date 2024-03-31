@@ -1,6 +1,7 @@
 import * as functions from 'firebase-functions';
 import admin from 'firebase-admin';
 import * as nodemailer from 'nodemailer';
+import logger from '../logger';
 
 // nodemailerの設定
 const mailTransport = nodemailer.createTransport({
@@ -25,6 +26,16 @@ export const sendEmailToUser = functions
       // ユーザー情報の取得
       const userRecord = await admin.auth().getUser(userId);
       const email = userRecord.email; // メール送信用にユーザーのメールアドレスを取得
+      const user = await admin
+        .firestore()
+        .collection('users')
+        .doc(userId)
+        .get();
+      if (!user.exists) {
+        throw new Error('User not found');
+      }
+      const userData = user.data();
+      const token = userData?.token; // FCM送信用にユーザーのFCMトークンを取得
 
       // メール送信
       const mailOptions = {
@@ -34,18 +45,22 @@ export const sendEmailToUser = functions
         text: 'メールの本文',
       };
       await mailTransport.sendMail(mailOptions);
-      console.log('メール送信成功:', email);
+      logger.info('メール送信成功:', email);
 
-      // FCM送信
-      const message = {
-        notification: {
-          title: '通知のタイトル',
-          body: '通知の本文',
-        },
-        token: userRecord.customClaims?.['fcmToken'], // FCMトークンはユーザーのカスタムクレームなどに保存されていると仮定
-      };
-      await admin.messaging().send(message);
-      console.log('FCM送信成功:', userId);
+      if (token) {
+        // FCM送信
+        const message = {
+          notification: {
+            title: '通知のタイトル',
+            body: '通知の本文',
+          },
+          token: userRecord.customClaims?.['fcmToken'], // FCMトークンはユーザーのカスタムクレームなどに保存されていると仮定
+        };
+        await admin.messaging().send(message);
+        logger.info('FCM送信成功:', userId);
+      } else {
+        logger.info('FCMトークンが見つかりませんでした:', userId);
+      }
 
       return { success: true };
     } catch (error) {
