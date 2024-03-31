@@ -15,10 +15,11 @@ async function getData() {
 }
 
 const Point = async ({ searchParams }: { searchParams: any }) => {
-  const data = await getData();
-  const isStatus = searchParams['status'];
+  // const data = await getData();
+  // const isStatus = searchParams['status'];
 
-  return <PointMain pointWithProducts={data} isStatus={isStatus ?? ''} />;
+  return <>てすと</>;
+  // return <PointMain pointWithProducts={data} isStatus={isStatus ?? ''} />;
 };
 
 export default Point;
