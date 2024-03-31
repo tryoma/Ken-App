@@ -8,9 +8,7 @@ interface ApiResponse {
 
 async function getData() {
   logger.info(`Stripe webhook start! ${process.env.NEXT_PUBLIC_API_BASE_URL}`);
-  const response = await fetch(
-    `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/products`
-  );
+  const response = await fetch(`https://dev.ken-app.com/api/products`);
 
   if (!response.ok) {
     // エラーハンドリングを追加
