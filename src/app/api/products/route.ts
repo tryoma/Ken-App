@@ -7,7 +7,9 @@ export async function GET(req: Request) {
     return NextResponse.json({ error: 'Method not allowed' }, { status: 405 });
   }
 
-  const products = await stripe.products.list();
+  const products = await stripe.products.list({
+    active: true, // アクティブな製品のみを取得
+  });
 
   const productsWithPrices: ProductWithPrices[] = await Promise.all(
     products.data.map(async product => {
