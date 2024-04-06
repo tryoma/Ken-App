@@ -92,7 +92,7 @@ export const UserSchema: yup.ObjectSchema<User> = yup.object().shape({
     .string()
     .label('剣道の目標')
     .max(100, '100文字以内で入力してください'),
-  token: yup.string().label('トークン'),
+  fcmToken: yup.string().label('トークン'),
 });
 
 export const RequestFormSchema = yup.object().shape({

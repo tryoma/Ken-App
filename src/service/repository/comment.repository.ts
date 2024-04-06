@@ -4,6 +4,7 @@ import {
   collection,
   doc,
   getDocs,
+  onSnapshot,
 } from 'firebase/firestore';
 import { db } from '../../../firebase';
 import { AdviceRequest, Comment } from '@/type';
@@ -22,6 +23,23 @@ export const CommentRepository = {
     );
 
     return comments;
+  },
+  fetchCommentListSubscribe: (
+    trainingRecordId: string,
+    onCommentsUpdate: (comments: Comment[]) => void
+  ) => {
+    const trainingRecordRef = doc(db, 'TrainingRecords', trainingRecordId);
+    const commentsRef = collection(trainingRecordRef, 'comments');
+
+    const unsubscribe = onSnapshot(commentsRef, snapshot => {
+      const comments = snapshot.docs.map(doc => ({
+        id: doc.id,
+        ...doc.data(),
+      })) as Comment[];
+      onCommentsUpdate(comments);
+    });
+
+    return unsubscribe;
   },
   createComment: async (
     trainingRecordId: string,

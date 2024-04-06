@@ -13,7 +13,7 @@ export type User = {
   kendoRank?: Rank;
   biography?: string;
   kendoGoal?: string;
-  token?: string;
+  fcmToken?: string;
   // createdAt: Timestamp;
 };
 

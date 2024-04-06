@@ -35,7 +35,7 @@ export const sendEmailToUser = functions
         throw new Error('User not found');
       }
       const userData = user.data();
-      const token = userData?.token; // FCM送信用にユーザーのFCMトークンを取得
+      const fcmToken = userData?.fcmToken; // FCM送信用にユーザーのFCMトークンを取得
 
       // メール送信
       const mailOptions = {
@@ -47,7 +47,7 @@ export const sendEmailToUser = functions
       await mailTransport.sendMail(mailOptions);
       logger.info('メール送信成功:', email);
 
-      if (token) {
+      if (fcmToken) {
         // FCM送信
         const message = {
           notification: {

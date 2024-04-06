@@ -20,13 +20,18 @@ const Header = () => {
   useEffect(() => {
     if (!userId) return;
     const fetchData = async () => {
-      const user = await UserService.fetchUser(userId);
-      setUser(user);
       const count = await NotificationService.fetchNotificationsCount(userId);
       setNotWatchNotificationCount(count);
     };
     fetchData();
   }, [userId, settingChangeFlag]);
+
+  useEffect(() => {
+    if (!userId) return;
+    const unsubscribe = UserService.fetchUserSubscribe(userId, setUser);
+
+    return () => unsubscribe();
+  }, [userId]);
 
   const handleSettingsClick = () => {
     setIsSettingsOpen(!isSettingsOpen);

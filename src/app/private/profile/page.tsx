@@ -20,8 +20,8 @@ import { verifyBeforeUpdateEmail } from 'firebase/auth';
 import { FirebaseError } from 'firebase/app';
 
 const Profile = () => {
-  const { userId, settingChangeFlag, setSettingChangeFlag, user } =
-    useAppContext();
+  const { userId, user } = useAppContext();
+  const [profileUser, setProfileUser] = useState<User | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
   const snackbarRef = useRef<SnackbarHandler>(null);
   const openSnackbar = (message: string) => {
@@ -40,23 +40,25 @@ const Profile = () => {
     formState: { errors },
   } = useForm<User>({
     mode: 'all',
+    defaultValues: profileUser ? profileUser : {},
     resolver: yupResolver(UserSchema),
   });
 
   useEffect(() => {
-    const fetchData = async () => {
-      if (!userId) return;
-      const user = await UserService.fetchUser(userId);
-      if (user) reset(user);
-      setLoading(false);
-    };
-    fetchData();
-  }, [userId]);
+    if (!userId) return;
+    const unsubscribe = UserService.fetchUserSubscribe(userId, updatedUser => {
+      setProfileUser(updatedUser);
+      if (updatedUser) {
+        reset(updatedUser);
+        setLoading(false);
+      }
+    });
+    return () => unsubscribe();
+  }, [userId, reset]);
 
   const handleUpdate = async (data: User) => {
     if (!userId) return;
     await UserService.updateUser(userId, data);
-    setSettingChangeFlag(!settingChangeFlag);
     openSnackbar('プロフィールを更新しました');
   };
 

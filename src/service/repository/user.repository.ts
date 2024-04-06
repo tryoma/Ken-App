@@ -3,6 +3,7 @@ import {
   doc,
   getDoc,
   getDocs,
+  onSnapshot,
   query,
   setDoc,
   where,
@@ -43,5 +44,20 @@ export const UserRepository = {
   updateUser: async (userId: string, data: Partial<User>): Promise<void> => {
     const docRef = doc(db, 'Users', userId);
     await setDoc(docRef, data, { merge: true });
+  },
+
+  fetchUserSubscribe: (
+    userId: string,
+    onUserData: (user: User | null) => void
+  ) => {
+    const docRef = doc(db, 'Users', userId);
+
+    const unsubscribe = onSnapshot(docRef, doc => {
+      const userData = doc.exists() ? doc.data() : null;
+      const user = userData ? ({ id: userId, ...userData } as User) : null;
+      onUserData(user);
+    });
+
+    return unsubscribe;
   },
 };

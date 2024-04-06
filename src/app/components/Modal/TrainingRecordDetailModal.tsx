@@ -34,29 +34,33 @@ const TrainingRecordDetailModal = ({
     trainingRecord.isFavorite ?? false
   );
   const [newComment, setNewComment] = useState('');
-  const [fetchFlag, setFetchFlag] = useState(false);
   const [teacherComments, setTeacherComments] = useState<Comment[]>([]);
   const [publicComments, setPublicComments] = useState<Comment[]>([]);
 
   useEffect(() => {
-    const fetchData = async () => {
-      const comments = await CommentService.fetchCommentList(trainingRecord.id);
-      const newTeacherComments: Comment[] = [];
-      const newPublicComments: Comment[] = [];
+    if (!trainingRecord.id) return;
 
-      comments.forEach(comment => {
-        if (comment.isTrainer) {
-          newTeacherComments.push(comment);
-        } else {
-          newPublicComments.push(comment);
-        }
-      });
+    const unsubscribe = CommentService.fetchCommentListSubscribe(
+      trainingRecord.id,
+      comments => {
+        const newTeacherComments: Comment[] = [];
+        const newPublicComments: Comment[] = [];
 
-      setTeacherComments(newTeacherComments);
-      setPublicComments(newPublicComments);
-    };
-    fetchData();
-  }, [trainingRecord, fetchFlag]);
+        comments.forEach(comment => {
+          if (comment.isTrainer) {
+            newTeacherComments.push(comment);
+          } else {
+            newPublicComments.push(comment);
+          }
+        });
+
+        setTeacherComments(newTeacherComments);
+        setPublicComments(newPublicComments);
+      }
+    );
+
+    return () => unsubscribe();
+  }, [trainingRecord]);
 
   useEffect(() => {
     const updateWatchCount = async () => {
@@ -71,7 +75,6 @@ const TrainingRecordDetailModal = ({
     if (!userId) return;
     if (newComment.trim() !== '') {
       await CommentService.createComment(trainingRecord.id, userId, newComment);
-      setFetchFlag(!fetchFlag);
       setNewComment('');
     }
   };

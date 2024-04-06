@@ -20,7 +20,7 @@ const Notification = () => {
             vapidKey: process.env.NEXT_PUBLIC_FIREBASE_VAPID_KEY,
           });
           if (currentToken) {
-            await UserService.updateUser(userId, { token: currentToken });
+            await UserService.updateUser(userId, { fcmToken: currentToken });
           } else {
             console.log(
               'No registration token available. Request permission to generate one.'

@@ -1,9 +1,18 @@
-import { AdviceRequest } from '@/type';
+import { AdviceRequest, Comment } from '@/type';
 import { CommentRepository } from '../repository';
 
 export const CommentService = {
   fetchCommentList: async (trainingRecordId: string) => {
     return await CommentRepository.fetchCommentList(trainingRecordId);
+  },
+  fetchCommentListSubscribe: (
+    trainingRecordId: string,
+    onCommentsUpdate: (comments: Comment[]) => void
+  ) => {
+    return CommentRepository.fetchCommentListSubscribe(
+      trainingRecordId,
+      onCommentsUpdate
+    );
   },
   createComment: async (
     trainingRecordId: string,

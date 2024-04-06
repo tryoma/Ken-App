@@ -1,7 +1,6 @@
 import { User } from '@/type';
 import { UserRepository } from '../repository';
 
-
 export const UserService = {
   createUser: async (userId: string, data: Partial<User>) => {
     return UserRepository.createUser(userId, data);
@@ -17,5 +16,12 @@ export const UserService = {
 
   updateUser: async (userId: string, data: Partial<User>) => {
     return UserRepository.updateUser(userId, data);
+  },
+
+  fetchUserSubscribe: (
+    userId: string,
+    onUserData: (user: User | null) => void
+  ) => {
+    return UserRepository.fetchUserSubscribe(userId, onUserData);
   },
 };
