@@ -1,7 +1,7 @@
 import * as functions from 'firebase-functions';
 import admin from 'firebase-admin';
 import * as nodemailer from 'nodemailer';
-import logger from '../logger';
+// import logger from '../logger';
 
 // nodemailerの設定
 const mailTransport = nodemailer.createTransport({
@@ -12,10 +12,11 @@ const mailTransport = nodemailer.createTransport({
   },
 });
 
-export const sendEmailToUser = functions
+export const sendEmailAndFcmToUser = functions
   .region('asia-northeast1')
   .https.onCall(async (data, context) => {
     const userId = data.userId;
+    console.log('userId:', userId);
     if (!userId)
       throw new functions.https.HttpsError(
         'invalid-argument',
@@ -28,7 +29,7 @@ export const sendEmailToUser = functions
       const email = userRecord.email; // メール送信用にユーザーのメールアドレスを取得
       const user = await admin
         .firestore()
-        .collection('users')
+        .collection('Users')
         .doc(userId)
         .get();
       if (!user.exists) {
@@ -36,16 +37,16 @@ export const sendEmailToUser = functions
       }
       const userData = user.data();
       const fcmToken = userData?.fcmToken; // FCM送信用にユーザーのFCMトークンを取得
-
       // メール送信
       const mailOptions = {
-        from: '"Your App Name" <your-app-email@gmail.com>',
+        from: functions.config().gmail.email,
         to: email,
         subject: 'メールの件名',
         text: 'メールの本文',
       };
       await mailTransport.sendMail(mailOptions);
-      logger.info('メール送信成功:', email);
+      // logger.info('メール送信成功:', email);
+      console.log('メール送信成功:', email);
 
       if (fcmToken) {
         // FCM送信
@@ -54,12 +55,14 @@ export const sendEmailToUser = functions
             title: '通知のタイトル',
             body: '通知の本文',
           },
-          token: userRecord.customClaims?.['fcmToken'], // FCMトークンはユーザーのカスタムクレームなどに保存されていると仮定
+          token: fcmToken,
         };
         await admin.messaging().send(message);
-        logger.info('FCM送信成功:', userId);
+        // logger.info('FCM送信成功:', userId);
+        console.log('FCM送信成功:', userId);
       } else {
-        logger.info('FCMトークンが見つかりませんでした:', userId);
+        // logger.info('FCMトークンが見つかりませんでした:', userId);
+        console.error('FCMトークンが見つかりませんでした:');
       }
 
       return { success: true };

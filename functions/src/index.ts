@@ -3,4 +3,4 @@ admin.initializeApp();
 
 export { generateVideoThumbnail } from './functions/generateVideoThumbnail';
 export { updateStatusAfter5Days } from './functions/updateStatusAfter5Days';
-export { sendEmailToUser } from './functions/sendEmailToUser';
+export { sendEmailAndFcmToUser } from './functions/sendEmailAndFcmToUser';

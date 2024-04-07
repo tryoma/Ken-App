@@ -14,6 +14,7 @@ const Setting = () => {
   const [error, setError] = useState('');
 
   const functions = getFunctions();
+  functions.region = 'asia-northeast1';
   if (process.env.NODE_ENV === 'development') {
     connectFunctionsEmulator(functions, 'localhost', 5001);
   }
