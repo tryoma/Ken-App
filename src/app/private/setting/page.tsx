@@ -6,9 +6,10 @@ import { getFunctions, httpsCallable } from 'firebase/functions';
 const Setting = () => {
   const { userId } = useAppContext();
   const functions = getFunctions(); // Firebase Functionsのインスタンスを取得
-  const sendMailToUser = httpsCallable(functions, 'sendMailToUser');
+  const sendMailToUser = httpsCallable(functions, 'sendEmailToUserHttp');
 
   const handleSendMail = async () => {
+    console.log({ sendMailToUser });
     if (!userId) return;
     await sendMailToUser({ userId })
       .then(result => {
