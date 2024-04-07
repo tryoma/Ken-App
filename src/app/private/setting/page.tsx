@@ -17,7 +17,10 @@ const Setting = () => {
   if (process.env.NODE_ENV === 'development') {
     connectFunctionsEmulator(functions, 'localhost', 5001);
   }
-  const sendMailToUser = httpsCallable(functions, 'sendEmailToUser');
+  const sendMailAndFcmToUser = httpsCallable(
+    functions,
+    'sendEmailAndFcmToUser'
+  );
 
   const handleSendMail = async () => {
     if (!userId) {
@@ -25,7 +28,7 @@ const Setting = () => {
       return;
     }
     setLoading(true);
-    await sendMailToUser({ userId })
+    await sendMailAndFcmToUser({ userId })
       .then(result => {
         console.log('メール送信成功:', result);
         setLoading(false);
@@ -38,7 +41,7 @@ const Setting = () => {
   };
 
   return (
-    <div className='mt-10'>
+    <div className="mt-10">
       <button onClick={handleSendMail} disabled={loading}>
         {loading ? '送信中...' : 'メールを送る'}
       </button>

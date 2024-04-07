@@ -1,7 +1,10 @@
 {
   "projects": {
-    "default": "ken-app-5926d",
+    "default": "ken-app-local",
+    "local": "ken-app-local",
     "dev": "ken-app-5926d",
     "prod": "ken-app-prod"
-  }
+  },
+  "targets": {},
+  "etags": {}
 }
