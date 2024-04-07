@@ -1,30 +1,50 @@
 'use client';
 
 import { useAppContext } from '@/context/AppContext';
-import { getFunctions, httpsCallable } from 'firebase/functions';
+import {
+  connectFunctionsEmulator,
+  getFunctions,
+  httpsCallable,
+} from 'firebase/functions';
+import { useState } from 'react';
 
 const Setting = () => {
   const { userId } = useAppContext();
-  const functions = getFunctions(); // Firebase Functionsのインスタンスを取得
-  const sendMailToUser = httpsCallable(functions, 'sendEmailToUserHttp');
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState('');
+
+  const functions = getFunctions();
+  if (process.env.NODE_ENV === 'development') {
+    connectFunctionsEmulator(functions, 'localhost', 5001);
+  }
+  const sendMailToUser = httpsCallable(functions, 'sendEmailToUser');
 
   const handleSendMail = async () => {
-    console.log({ sendMailToUser });
-    if (!userId) return;
+    if (!userId) {
+      setError('ユーザーIDが存在しません');
+      return;
+    }
+    setLoading(true);
     await sendMailToUser({ userId })
       .then(result => {
         console.log('メール送信成功:', result);
+        setLoading(false);
       })
       .catch(error => {
         console.error('エラー:', error);
+        setError('メール送信に失敗しました');
+        setLoading(false);
       });
   };
 
   return (
-    <>
-      <button onClick={handleSendMail}>メールを送る</button>
+    <div className='mt-10'>
+      <button onClick={handleSendMail} disabled={loading}>
+        {loading ? '送信中...' : 'メールを送る'}
+      </button>
+      {error && <div>{error}</div>}
       <div>Setting</div>
-    </>
+    </div>
   );
 };
 
