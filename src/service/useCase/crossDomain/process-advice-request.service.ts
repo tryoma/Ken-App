@@ -29,7 +29,9 @@ export const ProcessAdviceRequestService = {
       };
     }
 
-    const paymentPoint = trainerUser.point ? trainerUser.point * 0.8 : 0;
+    const paymentPoint = trainerUser.requestPoint
+      ? trainerUser.requestPoint * 0.8
+      : 0;
 
     await UserService.updateUser(user.id, { point: diff });
     await AdviceRequestService.updateAdviceRequest(adviceRequestId, {
