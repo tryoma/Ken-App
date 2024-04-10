@@ -16,6 +16,7 @@ import EditTrainingRecordModal from '@/app/components/Modal/EditTrainingRecordMo
 import TrainingRecordCardList from '@/app/components/trainingRecord/TrainingRecordCardList';
 import useTrainingRecords from '@/app/hook/useTrainingRecords';
 import UserIconAndNameWithUserId from '@/app/components/Modal/parts/UserIconAndNameWithUserId';
+import { newrelic } from '@/app/newRelic';
 
 const MyTrainingRecords = () => {
   const router = useRouter();
@@ -68,6 +69,11 @@ const MyTrainingRecords = () => {
 
   const onDeleteTrainingRequest = async (trainingRecord: TrainingRecord) => {
     if (!userId) return;
+    // 仮の実装
+    newrelic.addPageAction('deleteTrainingRequest', {
+      userId: userId,
+      trainingRecordId: trainingRecord.id,
+    });
     await TrainingRecordService.deleteTrainingRecord(trainingRecord.id);
     await fetchRecords();
     onModalClose();
