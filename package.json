@@ -3,15 +3,17 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "NODE_ENV=local node generate-sw.js && next dev",
-    "build:dev": "NODE_ENV=local rm -rf .next && node generate-sw.js && next build",
-    "build": "node generate-sw.js && next build",
-    "start": "next start",
+    "dev": "NODE_OPTIONS='-r @newrelic/next' NODE_ENV=local node generate-sw.js && next dev",
+    "build:dev": "NODE_OPTIONS='-r @newrelic/next' NODE_ENV=local rm -rf .next && node generate-sw.js && next build",
+    "build": "NODE_OPTIONS='-r @newrelic/next' node generate-sw.js && next build",
+    "start": "NODE_OPTIONS='-r @newrelic/next' next start",
     "lint": "next lint"
   },
   "dependencies": {
     "@hookform/resolvers": "^3.3.4",
+    "@newrelic/next": "^0.9.0",
     "firebase": "^10.6.0",
+    "newrelic": "^11.15.0",
     "next": "14.0.3",
     "openai": "^4.20.1",
     "react": "^18",

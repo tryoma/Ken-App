@@ -14,9 +14,6 @@ export default function RootLayout({
 }) {
   return (
     <html lang="ja">
-      <head>
-        <script src="/scripts/newRelic-setting.js" defer></script>
-      </head>
       <body>{children}</body>
     </html>
   );
