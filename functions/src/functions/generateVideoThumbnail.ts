@@ -33,7 +33,7 @@ export const generateVideoThumbnail = functions
       console.log('This is not a video.');
       return null;
     }
-    const commmonKey = extractCommonKey(filePath ?? '');
+    const commonKey = extractCommonKey(filePath ?? '');
 
     const bucket = admin.storage().bucket(fileBucket);
     const tempFilePath = path.join(os.tmpdir(), fileName);
@@ -59,21 +59,19 @@ export const generateVideoThumbnail = functions
         })
         .on('end', async () => {
           console.log('Thumbnail created');
-          await bucket.upload(tempThumbPath, {
-            destination: thumbFilePath,
-          });
+          await bucket.upload(tempThumbPath, { destination: thumbFilePath });
 
-          // サムネイルのダウンロードURLを取得
+          // Make the thumbnail publicly accessible
+          await bucket.file(thumbFilePath).makePublic();
+
+          // Get the public URL for the thumbnail
           const thumbFileRef = bucket.file(thumbFilePath);
-          const thumbURL = await thumbFileRef.getSignedUrl({
-            action: 'read',
-            expires: Date.now() + 100 * 365 * 24 * 60 * 60 * 1000, // 有効期限の設定
-          });
+          const thumbURL = thumbFileRef.publicUrl();
 
-          // Firestoreに動画のURLとサムネイルのURLを保存
+          // Save the video and thumbnail URLs to Firestore
           await admin.firestore().collection('Thumbnails').add({
-            thumbnailUrl: thumbURL[0],
-            commonKey: commmonKey,
+            thumbnailUrl: thumbURL,
+            commonKey: commonKey,
           });
 
           fs.unlinkSync(tempFilePath);
