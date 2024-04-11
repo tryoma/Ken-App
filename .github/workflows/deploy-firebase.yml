@@ -6,23 +6,12 @@ on:
       - develop
 
 jobs:
-  deploy:
+  main:
+    name: Deploy to Firebase
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v3
-
-      - name: Set up Node.js
-        uses: actions/setup-node@v3
-        with:
-          node-version: '20'
-
-      - name: Install dependencies
-        run: npm install
-
-      - name: Deploy to Firebase
-        uses: w9jds/firebase-action@master
-        with:
-          args: deploy --only functions
-        env:
-          FIREBASE_TOKEN: ${{ secrets.DEV_FIREBASE_TOKEN }}
+    - uses: actions/checkout@v2
+    - uses: jsryudev/deploy-firebase-functions@v20.0.0
+      env:
+        FIREBASE_TOKEN: ${{ secrets.DEV_FIREBASE_TOKEN }}
+        FIREBASE_PROJECT: ken-app-5926d
