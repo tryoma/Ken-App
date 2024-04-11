@@ -13,6 +13,7 @@ jobs:
       GCLOUD_SERVICE_KEY: ${{ secrets.GCLOUD_SERVICE_KEY }}
       GMAIL_EMAIL: ${{ secrets.GMAIL_EMAIL }}
       GMAIL_PASSWORD: ${{ secrets.GMAIL_PASSWORD }}
+      DEV_FIREBASE_TOKEN: ${{ secrets.DEV_FIREBASE_TOKEN }}
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
@@ -26,9 +27,7 @@ jobs:
           firebase use dev
       - name: set environments
         run: |
-          firebase functions:config:set gmail.email="$GMAIL_EMAIL" gmail.password="$GMAIL_PASSWORD"
-        env:
-          GCP_SA_KEY: ${{ secrets.GCLOUD_SERVICE_KEY }}
+          firebase functions:config:set gmail.email="$GMAIL_EMAIL" gmail.password="$GMAIL_PASSWORD" --token "$DEV_FIREBASE_TOKEN"
       - name: change directory
         run: |
           cd functions
