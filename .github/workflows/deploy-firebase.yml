@@ -17,8 +17,6 @@ jobs:
       - name: install firebase
         run: |
           npm install -g firebase-tools
-          npm init
-          npm install --save firebase
       - name: make GOOGLE_APPLICATION_CREDENTIALS
         run: echo $GCLOUD_SERVICE_KEY | base64 -d > $GOOGLE_APPLICATION_CREDENTIALS
       - name: change environments
