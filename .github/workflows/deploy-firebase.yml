@@ -8,18 +8,25 @@ on:
 jobs:
   deploy:
     name: Deploy
+    env:
+      GOOGLE_APPLICATION_CREDENTIALS: ${{ secrets.GOOGLE_APPLICATION_CREDENTIALS }}
+      GCLOUD_SERVICE_KEY: ${{ secrets.GCLOUD_SERVICE_KEY }}
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
+      - name: install firebase
+        run: npm install --save-dev firebase-tools
+      - name: make GOOGLE_APPLICATION_CREDENTIALS
+        run: echo $GCLOUD_SERVICE_KEY | base64 -d > $GOOGLE_APPLICATION_CREDENTIALS
       - name: Install npm packages
         run: |
           cd functions
           npm install
+      - name: change environments
+        run: |
+          firebase use dev
 
       - name: Deploy to Firebase
         uses: w9jds/firebase-action@master
         with:
-          args: deploy --only functions --project dev
-        env:
-          FIREBASE_TOKEN: ${{ secrets.DEV_FIREBASE_TOKEN }}
-          FIREBASE_PROJECT: ken-app-5926d
+          args: deploy --only functions
