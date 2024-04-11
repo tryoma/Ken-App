@@ -11,6 +11,8 @@ jobs:
     env:
       GOOGLE_APPLICATION_CREDENTIALS: ${{ secrets.GOOGLE_APPLICATION_CREDENTIALS }}
       GCLOUD_SERVICE_KEY: ${{ secrets.GCLOUD_SERVICE_KEY }}
+      GMAIL_EMAIL: ${{ secrets.GMAIL_EMAIL }}
+      GMAIL_PASSWORD: ${{ secrets.GMAIL_PASSWORD }}
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
@@ -22,6 +24,11 @@ jobs:
       - name: change environments
         run: |
           firebase use dev
+      - name: set environments
+        run: |
+          firebase functions:config:set gmail.email="$GMAIL_EMAIL" gmail.password="$GMAIL_PASSWORD"
+        env:
+          GCP_SA_KEY: ${{ secrets.GCLOUD_SERVICE_KEY }}
       - name: change directory
         run: |
           cd functions
