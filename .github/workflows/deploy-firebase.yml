@@ -30,7 +30,7 @@ jobs:
           firebase functions:config:set gmail.email="$GMAIL_EMAIL" gmail.password="$GMAIL_PASSWORD" --token "$DEV_FIREBASE_TOKEN"
       - name: get environments
         run: |
-          firebase functions:config:get
+          firebase functions:config:get --token "$DEV_FIREBASE_TOKEN"
       - name: change directory
         run: |
           cd functions
