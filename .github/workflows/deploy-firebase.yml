@@ -27,7 +27,10 @@ jobs:
           firebase use dev
       - name: set environments
         run: |
-          firebase functions:config:set gmail.email=$GMAIL_EMAIL gmail.password=$GMAIL_PASSWORD --token "$DEV_FIREBASE_TOKEN"
+          firebase functions:config:set gmail.email="$GMAIL_EMAIL" gmail.password="$GMAIL_PASSWORD" --token "$DEV_FIREBASE_TOKEN"
+      - name: get environments
+        run: |
+          firebase functions:config:get
       - name: change directory
         run: |
           cd functions
