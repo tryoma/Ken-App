@@ -57,8 +57,6 @@ const MyTrainingRecords = () => {
   };
 
   const onEditTrainingRecordSubmit = async (data: TrainingRecordFormValues) => {
-    // 確認用
-    console.log({ data, selectedEditTrainingRecord, userId });
     if (!userId || !selectedEditTrainingRecord) return;
     await TrainingRecordService.updateTrainingRecord(
       selectedEditTrainingRecord.id,

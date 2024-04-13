@@ -5,7 +5,7 @@ import { storage } from '../../../../firebase';
 import { getDownloadURL, ref, uploadBytes } from 'firebase/storage';
 import { formatDate, getDateString } from '@/util/logic';
 import { yupResolver } from '@hookform/resolvers/yup';
-import { TrainingRecordSchema } from '@/validationSchema';
+import { ExtendedTrainingRecordSchema } from '@/validationSchema';
 import DefaultModal from './DefaultModal';
 
 interface Props {
@@ -34,7 +34,7 @@ const NewTrainingRecordModal = ({
       videoChoice: 'youtubeUrl',
       youtubeUrl: '',
     },
-    resolver: yupResolver(TrainingRecordSchema),
+    resolver: yupResolver(ExtendedTrainingRecordSchema),
   });
 
   const [uploading, setUploading] = useState(false);

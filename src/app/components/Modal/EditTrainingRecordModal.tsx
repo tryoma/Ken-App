@@ -36,11 +36,6 @@ const EditTrainingRecordModal = ({
     resolver: yupResolver(TrainingRecordSchema),
   });
 
-  const editSubmit = async (data: TrainingRecordFormValues) => {
-    await onSubmit(data);
-    onEditRecordClose();
-  };
-
   return (
     <DefaultModal onCloseModal={onEditRecordClose}>
       <>
@@ -49,7 +44,7 @@ const EditTrainingRecordModal = ({
             稽古記録の編集
           </h3>
         </div>
-        <form onSubmit={handleSubmit(editSubmit)}>
+        <form onSubmit={handleSubmit(onSubmit)}>
           <div className="mb-4">
             <label
               htmlFor="title"

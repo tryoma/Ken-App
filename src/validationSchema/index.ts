@@ -23,17 +23,6 @@ export const TrainingRecordSchema = yup.object().shape({
           )
           .required('Youtube動画URLを入力してください'),
     }),
-  videoFile: yup
-    .mixed<FileList>()
-    .label('動画ファイル')
-    .test('fileSize', 'ファイルサイズは100MB以下にしてください', value => {
-      if (!value || value.length == 0) return true;
-      return value[0].size <= 1024000000;
-    })
-    .when('videoChoice', {
-      is: 'videoFile',
-      then: schema => schema.required('動画ファイルを選択してください'),
-    }),
   videoChoice: yup
     .string()
     .oneOf(['youtubeUrl', 'videoFile'], 'どちらかを選択してください')
@@ -63,6 +52,22 @@ export const TrainingRecordSchema = yup.object().shape({
     .oneOf(['true', 'false'], 'どちらかを選択してください')
     .required('どちらかを選択してください'),
 });
+
+export const ExtendedTrainingRecordSchema = TrainingRecordSchema.concat(
+  yup.object().shape({
+    videoFile: yup
+      .mixed<FileList>()
+      .label('動画ファイル')
+      .test('fileSize', 'ファイルサイズは100MB以下にしてください', value => {
+        if (!value || value.length == 0) return true;
+        return value[0].size <= 1024000000;
+      })
+      .when('videoChoice', {
+        is: 'videoFile',
+        then: schema => schema.required('動画ファイルを選択してください'),
+      }),
+  })
+);
 
 export const UserSchema: yup.ObjectSchema<User> = yup.object().shape({
   id: yup.string().label('ID').required('IDは必須です'),
