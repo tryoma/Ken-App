@@ -44,120 +44,119 @@ const EditTrainingRecordModal = ({
             新しい稽古記録の作成
           </h3>
         </div>
-        <form onSubmit={handleSubmit(onSubmit)}>
-          <div className="mb-4">
-            <label
-              htmlFor="title"
-              className="block text-gray-700 text-sm font-bold mb-2"
-            >
-              タイトル
-            </label>
-            <input
-              id="title"
-              type="text"
-              {...register('title')}
-              className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-            />
-            {errors.title && (
-              <span className="text-red-500 text-xs italic">
-                {errors.title.message}
-              </span>
-            )}
-          </div>
-          <div className="mb-4">
-            <label
-              htmlFor="date"
-              className="block text-gray-700 text-sm font-bold mb-2"
-            >
-              稽古日
-              <span className="ml-1 text-xs border border-gray-500 p-1 rounded">
-                任意
-              </span>
-            </label>
-            <input
-              id="date"
-              type="date"
-              {...register('date')}
-              className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-            />
-            {errors.date && (
-              <span className="text-red-500 text-xs italic">
-                {errors.date.message}
-              </span>
-            )}
-          </div>
-          <div className="mb-4">
-            <label
-              htmlFor="withWho"
-              className="block text-gray-700 text-sm font-bold mb-2"
-            >
-              稽古相手
-              <span className="ml-1 text-xs border border-gray-500 p-1 rounded">
-                任意
-              </span>
-            </label>
-            <input
-              id="withWho"
-              type="text"
-              {...register('withWho')}
-              className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-            />
-            {errors.withWho && (
-              <span className="text-red-500 text-xs italic">
-                {errors.withWho.message}
-              </span>
-            )}
-          </div>
-          <div className="mb-4">
-            <label
-              htmlFor="isPublic"
-              className="block text-gray-700 text-sm font-bold mb-2"
-            >
-              公開設定
-            </label>
-            <select
-              id="isPublic"
-              {...register('isPublic')}
-              className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-            >
-              <option value="true">公開</option>
-              <option value="false">非公開</option>
-            </select>
-            {watch('isPublic') === 'true' ? (
-              <span className="text-red-400 text-sm">
-                ※公開すると、ほかのユーザーも動画を確認できるようになります。
-              </span>
-            ) : null}
-          </div>
-          <div className="mb-4">
-            <label
-              htmlFor="memo"
-              className="block text-gray-700 text-sm font-bold mb-2"
-            >
-              メモ
-              <span className="ml-1 text-xs border border-gray-500 p-1 rounded">
-                任意
-              </span>
-            </label>
-            <textarea
-              id="memo"
-              rows={3}
-              {...register('memo')}
-              className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-            />
-            {errors.memo && (
-              <span className="text-red-500 text-xs italic">
-                {errors.memo.message}
-              </span>
-            )}
-          </div>
-          <button
-            type="submit"
-            className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+        <div className="mb-4">
+          <label
+            htmlFor="title"
+            className="block text-gray-700 text-sm font-bold mb-2"
           >
-            編集
-          </button>
-        </form>
+            タイトル
+          </label>
+          <input
+            id="title"
+            type="text"
+            {...register('title')}
+            className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+          />
+          {errors.title && (
+            <span className="text-red-500 text-xs italic">
+              {errors.title.message}
+            </span>
+          )}
+        </div>
+        <div className="mb-4">
+          <label
+            htmlFor="date"
+            className="block text-gray-700 text-sm font-bold mb-2"
+          >
+            稽古日
+            <span className="ml-1 text-xs border border-gray-500 p-1 rounded">
+              任意
+            </span>
+          </label>
+          <input
+            id="date"
+            type="date"
+            {...register('date')}
+            className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+          />
+          {errors.date && (
+            <span className="text-red-500 text-xs italic">
+              {errors.date.message}
+            </span>
+          )}
+        </div>
+        <div className="mb-4">
+          <label
+            htmlFor="withWho"
+            className="block text-gray-700 text-sm font-bold mb-2"
+          >
+            稽古相手
+            <span className="ml-1 text-xs border border-gray-500 p-1 rounded">
+              任意
+            </span>
+          </label>
+          <input
+            id="withWho"
+            type="text"
+            {...register('withWho')}
+            className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+          />
+          {errors.withWho && (
+            <span className="text-red-500 text-xs italic">
+              {errors.withWho.message}
+            </span>
+          )}
+        </div>
+        <div className="mb-4">
+          <label
+            htmlFor="isPublic"
+            className="block text-gray-700 text-sm font-bold mb-2"
+          >
+            公開設定
+          </label>
+          <select
+            id="isPublic"
+            {...register('isPublic')}
+            className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+          >
+            <option value="true">公開</option>
+            <option value="false">非公開</option>
+          </select>
+          {watch('isPublic') === 'true' ? (
+            <span className="text-red-400 text-sm">
+              ※公開すると、ほかのユーザーも動画を確認できるようになります。
+            </span>
+          ) : null}
+        </div>
+        <div className="mb-4">
+          <label
+            htmlFor="memo"
+            className="block text-gray-700 text-sm font-bold mb-2"
+          >
+            メモ
+            <span className="ml-1 text-xs border border-gray-500 p-1 rounded">
+              任意
+            </span>
+          </label>
+          <textarea
+            id="memo"
+            rows={3}
+            {...register('memo')}
+            className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+          />
+          {errors.memo && (
+            <span className="text-red-500 text-xs italic">
+              {errors.memo.message}
+            </span>
+          )}
+        </div>
+        <button
+          type="submit"
+          className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+          onClick={handleSubmit(onSubmit)}
+        >
+          編集
+        </button>
       </>
     </DefaultModal>
   );
