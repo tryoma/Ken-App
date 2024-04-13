@@ -7,6 +7,10 @@ import { FavoriteTrainingRecordService } from '@/service/useCase/favorite-traini
 import { TrainingRecordService } from '@/service/useCase/training-record.service';
 import TrainingRecordVideo from './parts/TrainingRecordVideo';
 import DefaultModal from './DefaultModal';
+import { FavoriteOffIcon, FavoriteOnIcon } from '../icons/FavoriteIcon';
+import EditIcon from '../icons/EditIcon';
+import DeleteIcon from '../icons/DeleteIcon';
+import SubmitIcon from '../icons/SubmitIcon';
 
 interface Props {
   trainingRecord: ExtendedTrainingRecord;
@@ -113,28 +117,27 @@ const TrainingRecordDetailModal = ({
       <>
         <TrainingRecordVideo trainingRecord={trainingRecord} />
         <div className="flex justify-center space-x-4 pt-2">
-          <button
-            className={`py-1 px-2 text-white rounded ${
-              isFavorite ? 'bg-gray-500' : 'bg-blue-500'
-            }`}
-            onClick={handleFavorite}
-          >
-            お気に入り{isFavorite ? '解除' : '登録'}
-          </button>
           {isExistRequest && (
             <button
               className="py-1 px-2 bg-blue-500 text-white rounded"
               onClick={handleRequest}
             >
-              この動画を依頼する
+              依頼する
             </button>
           )}
+          <button
+            className={`py-1 px-2 text-white bg-white rounded border 	
+            border-gray-400`}
+            onClick={handleFavorite}
+          >
+            {isFavorite ? <FavoriteOnIcon /> : <FavoriteOffIcon />}
+          </button>
           {isCanEdit && (
             <button
-              className="py-1 px-2 bg-blue-500 text-white rounded"
+              className="py-1 px-2 bg-gray-500 text-white rounded"
               onClick={() => onEditRequest?.(trainingRecord)}
             >
-              編集
+              <EditIcon />
             </button>
           )}
           {isCanDelete && (
@@ -142,7 +145,7 @@ const TrainingRecordDetailModal = ({
               className="py-1 px-2 bg-red-500 text-white rounded"
               onClick={handleDelete}
             >
-              削除
+              <DeleteIcon />
             </button>
           )}
         </div>
@@ -157,12 +160,13 @@ const TrainingRecordDetailModal = ({
                 value={newComment}
                 onChange={e => setNewComment(e.target.value)}
               />
-              <div className="text-right">
+              <div className="flex justify-end">
                 <button
-                  className="py-2 px-4 bg-blue-500 text-white rounded"
+                  className="py-2 px-4 bg-blue-500 text-white rounded flex items-center justify-center space-x-2"
                   onClick={handleAddComment}
                 >
-                  追加
+                  投稿
+                  <SubmitIcon />
                 </button>
               </div>
             </div>
