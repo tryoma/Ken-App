@@ -41,7 +41,7 @@ const EditTrainingRecordModal = ({
       <>
         <div className="flex justify-between items-center">
           <h3 className="text-xl leading-6 font-bold text-gray-900 mb-3">
-            新しい稽古記録の作成
+            稽古記録の編集
           </h3>
         </div>
         <div className="mb-4">
@@ -153,7 +153,10 @@ const EditTrainingRecordModal = ({
         <button
           type="submit"
           className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
-          onClick={handleSubmit(onSubmit)}
+          onClick={() => {
+            alert('編集しました');
+            handleSubmit(onSubmit);
+          }}
         >
           編集
         </button>
