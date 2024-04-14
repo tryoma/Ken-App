@@ -5,24 +5,51 @@ import { PointHistory, historyType } from '@/type';
 import { formatDateMMddHHmm } from '@/util/logic';
 import { useAppContext } from '@/context/AppContext';
 import { PointHistoryService } from '@/service/useCase/point-history.service';
+import { QueryDocumentSnapshot } from 'firebase/firestore';
+import LoadMoreIcon from '@/app/components/icons/LoadMoreIcon';
+
+const LIMIT_COUNT = 8;
 
 const PointHistory = () => {
   const { userId } = useAppContext();
   const [pointHistoryList, setPointHistoryList] = useState<
     PointHistory[] | null
   >(null);
+  const [lastVisible, setLastVisible] = useState<QueryDocumentSnapshot | null>(
+    null
+  );
+  const [isVisibleMoreButton, setIsVisibleMoreButton] = useState(false);
 
   useEffect(() => {
-    if (!userId) return;
-    const fetchData = async () => {
-      const pointHistories = await PointHistoryService.fetchPointHistoryList(
-        userId
-      );
-      setPointHistoryList(pointHistories);
-    };
-
     fetchData();
   }, [userId]);
+
+  const fetchData = async () => {
+    if (!userId) return;
+    const { histories: pointHistories, next } =
+      await PointHistoryService.fetchPointHistoryList(
+        userId,
+        LIMIT_COUNT,
+        lastVisible
+      );
+    if (pointHistories.length > LIMIT_COUNT) {
+      const newArray = pointHistories.slice(0, LIMIT_COUNT);
+      setPointHistoryList(prev => {
+        return prev ? [...prev, ...newArray] : newArray;
+      });
+      setIsVisibleMoreButton(true);
+    } else {
+      setPointHistoryList(prev => {
+        return prev ? [...prev, ...pointHistories] : pointHistories;
+      });
+      setIsVisibleMoreButton(false);
+    }
+    setLastVisible(next);
+  };
+
+  const handleClickArrow = async () => {
+    await fetchData();
+  };
 
   const historyTypeFormatter = (type: historyType) => {
     switch (type) {
@@ -70,6 +97,13 @@ const PointHistory = () => {
             ))}
           </tbody>
         </table>
+        {isVisibleMoreButton && (
+          <div className="mt-4 flex justify-center">
+            <div onClick={handleClickArrow}>
+              <LoadMoreIcon size={'2em'} />
+            </div>
+          </div>
+        )}
       </div>
     </div>
   );
