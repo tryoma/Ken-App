@@ -2,33 +2,25 @@
 
 import Link from 'next/link';
 import Image from 'next/image';
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { auth, storage } from '../../../../firebase';
 import { useAppContext } from '@/context/AppContext';
 import { getDownloadURL, ref, uploadBytes } from 'firebase/storage';
 import { Experience, Rank, User } from '@/type';
 import { imageUrl } from '@/util/logic';
-import {
-  CommonSnackbarWithRef,
-  SnackbarHandler,
-} from '@/app/components/snackbar';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { UserSchema } from '@/validationSchema';
 import { UserService } from '@/service/useCase/user.service';
 import { verifyBeforeUpdateEmail } from 'firebase/auth';
 import { FirebaseError } from 'firebase/app';
+import { useToastContext } from '@/context/ToastContext';
 
 const Profile = () => {
   const { userId, user } = useAppContext();
+  const showToast = useToastContext();
   const [profileUser, setProfileUser] = useState<User | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
-  const snackbarRef = useRef<SnackbarHandler>(null);
-  const openSnackbar = (message: string) => {
-    if (snackbarRef.current) {
-      snackbarRef.current.open(message);
-    }
-  };
 
   const {
     register,
@@ -59,7 +51,7 @@ const Profile = () => {
   const handleUpdate = async (data: User) => {
     if (!userId) return;
     await UserService.updateUser(userId, data);
-    openSnackbar('プロフィールを更新しました');
+    showToast('プロフィールを更新しました', 'success');
   };
 
   const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -330,7 +322,6 @@ const Profile = () => {
           </div>
         </div>
       </div>
-      <CommonSnackbarWithRef ref={snackbarRef} />
     </>
   );
 };

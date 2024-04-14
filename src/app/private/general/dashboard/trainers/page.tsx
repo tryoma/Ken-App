@@ -10,9 +10,11 @@ import { UserService } from '@/service/useCase/user.service';
 import { FetchLatestAdviceRequestEntitiesService } from '@/service/useCase/crossDomain/fetch-latest-advice-request-entities.service';
 import { AdviceRequestService } from '@/service/useCase/advice-request.service';
 import TrainingRecordTitle from '@/app/components/Modal/parts/TrainingRecordTitle';
+import { useToastContext } from '@/context/ToastContext';
 
 const Trainers = () => {
   const router = useRouter();
+  const showToast = useToastContext();
   const { userId } = useAppContext();
   const [preparingAdviceRequest, setPreparingAdviceRequest] =
     useState<AdviceRequest | null>(null);
@@ -45,9 +47,11 @@ const Trainers = () => {
           trainerUserId: trainer.id,
         }
       );
+      showToast('アドバイス依頼を仮作成しました', 'success');
       router.push('/private/general/dashboard/advice-requests');
     } else {
       await AdviceRequestService.createAdviceRequest(userId, trainer.id, '');
+      showToast('トレーナーを選択しました', 'success');
       router.push('/private/general/dashboard/my-training-records');
     }
   };
@@ -67,6 +71,7 @@ const Trainers = () => {
     await AdviceRequestService.updateAdviceRequest(preparingAdviceRequest.id, {
       status: 'deleted',
     });
+    showToast('アドバイス依頼を取り消しました', 'success');
     window.location.reload();
   };
 

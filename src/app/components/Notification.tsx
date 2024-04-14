@@ -1,12 +1,13 @@
 'use client';
 import { useAppContext } from '@/context/AppContext';
+import { useToastContext } from '@/context/ToastContext';
 import { UserService } from '@/service/useCase/user.service';
 import { getMessaging, getToken, onMessage } from 'firebase/messaging';
 import { useEffect, useState } from 'react';
-import toast, { Toaster } from 'react-hot-toast';
 
 const Notification = () => {
   const { userId } = useAppContext();
+  const showToast = useToastContext();
   useEffect(() => {
     if (!userId) return;
 
@@ -48,37 +49,16 @@ const Notification = () => {
   }, [userId]); // 依存配列にuserIdを追加
 
   const [notification, setNotification] = useState({ title: '', body: '' });
-  const notify = () => toast(<ToastDisplay />);
-  function ToastDisplay() {
-    return (
-      <div>
-        <p>
-          <b>{notification?.title}</b>
-        </p>
-        <p>{notification?.body}</p>
-      </div>
-    );
-  }
 
   useEffect(() => {
     if (notification?.title) {
-      notify();
+      setTimeout(() => {
+        showToast(notification.title + notification.body, 'info');
+      }, 1000);
     }
-  }, [notification]);
+  }, [notification, showToast]);
 
-  // requestForToken();
-
-  // onMessageListener()
-  //   .then(payload => {
-  //     console.log('payload', payload);
-  //     setNotification({
-  //       title: 'test',
-  //       body: 'test',
-  //     });
-  //   })
-  //   .catch(err => console.log('failed: ', err));
-
-  return <Toaster />;
+  return <></>;
 };
 
 export default Notification;

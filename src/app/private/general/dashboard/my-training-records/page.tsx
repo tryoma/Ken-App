@@ -16,10 +16,12 @@ import EditTrainingRecordModal from '@/app/components/Modal/EditTrainingRecordMo
 import TrainingRecordCardList from '@/app/components/trainingRecord/TrainingRecordCardList';
 import useTrainingRecords from '@/app/hook/useTrainingRecords';
 import UserIconAndNameWithUserId from '@/app/components/Modal/parts/UserIconAndNameWithUserId';
+import { useToastContext } from '@/context/ToastContext';
 
 const MyTrainingRecords = () => {
   const router = useRouter();
   const { userId } = useAppContext();
+  const showToast = useToastContext();
   const [preparingAdviceRequest, setPreparingAdviceRequest] =
     useState<AdviceRequest | null>(null);
   const [selectedTrainingRecord, setSelectedTrainingRecord] =
@@ -52,6 +54,7 @@ const MyTrainingRecords = () => {
   const onNewTrainingRecordSubmit = async (data: TrainingRecordFormValues) => {
     if (!userId) return;
     await TrainingRecordService.createTrainingRecord(userId, data);
+    showToast('記録を作成しました', 'success');
     await fetchRecords();
     onNewRecordModalClose();
   };
@@ -62,6 +65,7 @@ const MyTrainingRecords = () => {
       selectedEditTrainingRecord.id,
       data
     );
+    showToast('記録を更新しました', 'success');
     await fetchRecords();
     onModalClose();
   };
@@ -69,6 +73,7 @@ const MyTrainingRecords = () => {
   const onDeleteTrainingRequest = async (trainingRecord: TrainingRecord) => {
     if (!userId) return;
     await TrainingRecordService.deleteTrainingRecord(trainingRecord.id);
+    showToast('記録を削除しました', 'success');
     await fetchRecords();
     onModalClose();
   };
@@ -83,6 +88,7 @@ const MyTrainingRecords = () => {
           trainingRecordId: trainingRecord.id,
         }
       );
+      showToast('アドバイス依頼を仮作成しました', 'success');
       router.push('/private/general/dashboard/advice-requests');
     } else {
       await AdviceRequestService.createAdviceRequest(
@@ -90,6 +96,7 @@ const MyTrainingRecords = () => {
         '',
         trainingRecord.id
       );
+      showToast('記録を選択しました', 'success');
       router.push('/private/general/dashboard/trainers');
     }
   };

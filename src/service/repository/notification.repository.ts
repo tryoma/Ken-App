@@ -1,9 +1,10 @@
+import { NotificationType } from '@/type';
 import { db } from '../../../firebase';
 import { collection, getDocs, query, where } from 'firebase/firestore';
 
 export const NotificationRepository = {
   fetchNotificationsByType: async (
-    type: 'all' | 'individual',
+    type: NotificationType,
     userId: string | null
   ) => {
     const notificationsRef = collection(db, 'Notifications');

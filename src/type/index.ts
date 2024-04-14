@@ -94,8 +94,10 @@ export type Notification = {
   id: string;
   message?: string;
   createdAt?: Timestamp;
-  type?: string;
+  type?: NotificationType;
 };
+
+export type NotificationType = 'all' | 'individual';
 
 export type ExtendedNotification = Notification & {
   isRead?: boolean;

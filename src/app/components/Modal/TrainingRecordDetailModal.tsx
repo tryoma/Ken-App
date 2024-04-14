@@ -11,6 +11,7 @@ import { FavoriteOffIcon, FavoriteOnIcon } from '../icons/FavoriteIcon';
 import EditIcon from '../icons/EditIcon';
 import DeleteIcon from '../icons/DeleteIcon';
 import SubmitIcon from '../icons/SubmitIcon';
+import { useToastContext } from '@/context/ToastContext';
 
 interface Props {
   trainingRecord: ExtendedTrainingRecord;
@@ -34,6 +35,7 @@ const TrainingRecordDetailModal = ({
   isCanDelete = false,
 }: Props) => {
   const { userId } = useAppContext();
+  const showToast = useToastContext();
   const [isFavorite, setIsFavorite] = useState<boolean>(
     trainingRecord.isFavorite ?? false
   );
@@ -79,6 +81,7 @@ const TrainingRecordDetailModal = ({
     if (!userId) return;
     if (newComment.trim() !== '') {
       await CommentService.createComment(trainingRecord.id, userId, newComment);
+      showToast('コメントを投稿しました', 'success');
       setNewComment('');
     }
   };
@@ -89,6 +92,7 @@ const TrainingRecordDetailModal = ({
     // ユーザーが確認ボタンをクリックした場合
     if (isConfirmed) {
       await onRequest(trainingRecord);
+      showToast('依頼しました', 'success');
       onModalClose();
     }
   };
@@ -99,6 +103,7 @@ const TrainingRecordDetailModal = ({
     // ユーザーが確認ボタンをクリックした場合
     if (isConfirmed) {
       await onDeleteRequest?.(trainingRecord);
+      showToast('削除しました', 'success');
       onModalClose();
     }
   };
@@ -109,7 +114,14 @@ const TrainingRecordDetailModal = ({
       trainingRecord.id,
       userId
     );
-    setIsFavorite(!isFavorite);
+    setIsFavorite(prev => {
+      if (prev) {
+        showToast('お気に入りから削除しました', 'success');
+      } else {
+        showToast('お気に入りに追加しました', 'success');
+      }
+      return !prev;
+    });
   };
 
   return (

@@ -1,36 +1,33 @@
 'use client';
-
 import { ProductWithPrices } from '@/type';
-import {
-  CommonSnackbarWithRef,
-  SnackbarHandler,
-} from '@/app/components/snackbar';
 import { useAppContext } from '@/context/AppContext';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useState } from 'react';
+import { useToastContext } from '@/context/ToastContext';
 
 const Point = ({ searchParams }: { searchParams: any }) => {
+  const { userId } = useAppContext();
+  const showToast = useToastContext();
   const isStatus = searchParams['status'];
   const navigation = useRouter();
-  const { userId } = useAppContext();
   const [pointWithProducts, setPointWithProducts] = useState<
     ProductWithPrices[] | null
   >(null);
-  const snackbarRef = useRef<SnackbarHandler>(null);
-  const openSnackbar = (message: string) => {
-    if (snackbarRef.current) {
-      snackbarRef.current.open(message);
-    }
-  };
 
   useEffect(() => {
+    if (!isStatus) return; // isStatusが未定義の場合は何もしない
+
     if (isStatus === 'success') {
-      openSnackbar('購入が完了しました');
+      setTimeout(() => {
+        showToast('購入が完了しました', 'success');
+      }, 1000);
     } else if (isStatus === 'failure') {
-      openSnackbar('購入に失敗しました');
+      setTimeout(() => {
+        showToast('購入に失敗しました', 'error');
+      }, 1000);
     }
-  }, [isStatus]);
+  }, [isStatus, showToast]);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -105,7 +102,6 @@ const Point = ({ searchParams }: { searchParams: any }) => {
           </div>
         </div>
       </div>
-      <CommonSnackbarWithRef ref={snackbarRef} />
     </>
   );
 };
