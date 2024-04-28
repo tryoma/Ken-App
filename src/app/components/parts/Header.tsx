@@ -7,12 +7,12 @@ import { auth } from '../../../../firebase';
 import { useAppContext } from '@/context/AppContext';
 import { User } from '@/type';
 import UserIconAndName from './UserIconAndName';
-import { UserService } from '@/service/useCase/user.service';
 import { NotificationService } from '@/service/useCase/notification.service';
+import { useUserContext } from '@/context/UserContext';
 
 const Header = () => {
   const { userId, settingChangeFlag } = useAppContext();
-  const [user, setUser] = useState<User | null>(null);
+  const { user } = useUserContext();
   const [isSettingsOpen, setIsSettingsOpen] = useState(false);
   const [isSideBarOpen, setIsSideBarOpen] = useState(true);
   const [notWatchNotificationCount, setNotWatchNotificationCount] = useState(0);
@@ -25,13 +25,6 @@ const Header = () => {
     };
     fetchData();
   }, [userId, settingChangeFlag]);
-
-  useEffect(() => {
-    if (!userId) return;
-    const unsubscribe = UserService.fetchUserSubscribe(userId, setUser);
-
-    return () => unsubscribe();
-  }, [userId]);
 
   const handleSettingsClick = () => {
     setIsSettingsOpen(!isSettingsOpen);

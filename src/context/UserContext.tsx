@@ -18,13 +18,11 @@ type UserProviderProps = {
 type UserContextType = {
   user: User | null;
   setUser: React.Dispatch<React.SetStateAction<User | null>>;
-  isLoading: boolean;
 };
 
 const defalutContextData = {
   user: null,
-  setUser: () => {},
-  isLoading: true,
+  setUser: () => {}
 };
 
 const UserContext = createContext<UserContextType>(defalutContextData);
@@ -32,24 +30,19 @@ const UserContext = createContext<UserContextType>(defalutContextData);
 export function UserProvider({ children }: UserProviderProps) {
   const { userId } = useAppContext();
   const [user, setUser] = useState<User | null>(null);
-  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    const fetchData = async () => {
-      if (!userId) return;
-      const user = await UserService.fetchUser(userId);
-      setUser(user);
-    };
-    fetchData();
-    setIsLoading(false);
-  }, []);
+    if (!userId) return;
+    const unsubscribe = UserService.fetchUserSubscribe(userId, setUser);
+
+    return () => unsubscribe();
+  }, [userId]);
 
   return (
     <UserContext.Provider
       value={{
         user,
-        setUser,
-        isLoading,
+        setUser
       }}
     >
       {children}

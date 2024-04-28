@@ -3,6 +3,7 @@ import {
   doc,
   getDoc,
   getDocs,
+  onSnapshot,
   query,
   setDoc,
   where,
@@ -82,6 +83,34 @@ export const AdviceRequestRepository = {
     );
 
     return { adviceRequests };
+  },
+
+  fetchAdviceRequestListSubscribe: (
+    userId: string,
+    status: AdviceStatus,
+    onAdviceRequestUpdate: (adviceRequests: AdviceRequest[]) => void
+  ) => {
+    const adviceRequestsRef = collection(db, 'AdviceRequests');
+
+    const unsubscribe = onSnapshot(
+      query(
+        adviceRequestsRef,
+        where('userId', '==', userId),
+        where('status', '==', status)
+      ),
+      snapshot => {
+        const adviceRequests = snapshot.docs.map(
+          doc =>
+            ({
+              id: doc.id,
+              ...doc.data(),
+            } as AdviceRequest)
+        );
+        onAdviceRequestUpdate(adviceRequests);
+      }
+    );
+
+    return unsubscribe;
   },
 
   fetchAdviceRequestsCount: async (userId: string, status: AdviceStatus) => {

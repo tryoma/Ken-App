@@ -38,6 +38,18 @@ export const AdviceRequestService = {
     return await AdviceRequestRepository.fetchAdviceRequestList(userId, status);
   },
 
+  fetchAdviceRequestListSubscribe: (
+    userId: string,
+    status: AdviceStatus,
+    onAdviceRequestUpdate: (adviceRequests: AdviceRequest[]) => void
+  ) => {
+    return AdviceRequestRepository.fetchAdviceRequestListSubscribe(
+      userId,
+      status,
+      onAdviceRequestUpdate
+    );
+  },
+
   fetchAdviceRequestsCount: async (userId: string, status: AdviceStatus) => {
     return await AdviceRequestRepository.fetchAdviceRequestsCount(
       userId,

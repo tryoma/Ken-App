@@ -6,6 +6,7 @@ import { useEffect, useState } from 'react';
 import { usePathname } from 'next/navigation';
 import { useAppContext } from '@/context/AppContext';
 import { AdviceRequestService } from '@/service/useCase/advice-request.service';
+import { useUserContext } from '@/context/UserContext';
 
 interface SidebarItemProps {
   path: string;
@@ -16,6 +17,7 @@ interface SidebarItemProps {
 
 const Sidebar = () => {
   const { userId } = useAppContext();
+  const { user } = useUserContext();
   const pathname = usePathname();
   const [adviceRequestsCount, setAdviceRequestsCount] = useState(0);
   const [adviceRequestForMeCount, setAdviceRequestForMeCount] = useState(0);
@@ -122,12 +124,14 @@ const Sidebar = () => {
           currentPath={nowPage}
           count={adviceRequestsCount}
         />
-        <SidebarItem
-          path="/private/general/dashboard/advice-requests-for-me"
-          label="自分への依頼一覧"
-          currentPath={nowPage}
-          count={adviceRequestForMeCount}
-        />
+        {user?.isTrainer && (
+          <SidebarItem
+            path="/private/general/dashboard/advice-requests-for-me"
+            label="自分への依頼一覧"
+            currentPath={nowPage}
+            count={adviceRequestForMeCount}
+          />
+        )}
       </ul>
     </>
   );
