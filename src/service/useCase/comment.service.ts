@@ -14,6 +14,12 @@ export const CommentService = {
       onCommentsUpdate
     );
   },
+  fetchComment: async (trainingRecordId: string, adviceRequestId: string) => {
+    return await CommentRepository.fetchComment(
+      trainingRecordId,
+      adviceRequestId
+    );
+  },
   createComment: async (
     trainingRecordId: string,
     userId: string,

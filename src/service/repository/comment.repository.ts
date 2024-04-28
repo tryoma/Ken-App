@@ -5,6 +5,8 @@ import {
   doc,
   getDocs,
   onSnapshot,
+  query,
+  where,
 } from 'firebase/firestore';
 import { db } from '../../../firebase';
 import { AdviceRequest, Comment } from '@/type';
@@ -79,5 +81,26 @@ export const CommentRepository = {
     const commentsRef = collection(trainigRecordRef, 'comments');
 
     await addDoc(commentsRef, NewComment);
+  },
+
+  fetchComment: async (trainingRecordId: string, adviceRequestId: string) => {
+    console.log({ adviceRequestId });
+    const trainigRecordRef = doc(
+      collection(db, 'TrainingRecords'),
+      trainingRecordId
+    );
+    const commentsRef = collection(trainigRecordRef, 'comments');
+    const querySnapshot = await getDocs(
+      query(commentsRef, where('adviceRequestId', '==', adviceRequestId))
+    );
+    const comments = querySnapshot.docs.map(
+      doc =>
+        ({
+          id: doc.id,
+          ...doc.data(),
+        } as Comment)
+    );
+    console.log({ comments });
+    return comments[0];
   },
 };

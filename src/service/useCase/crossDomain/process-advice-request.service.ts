@@ -1,5 +1,8 @@
+import { Timestamp } from 'firebase/firestore';
 import { AdviceRequestService } from '../advice-request.service';
 import { UserService } from '../user.service';
+
+const LIMIT_DAYS = 5;
 
 export const ProcessAdviceRequestService = {
   create: async (
@@ -33,9 +36,20 @@ export const ProcessAdviceRequestService = {
       ? trainerUser.requestPoint * 0.8
       : 0;
 
+    const now = new Date();
+    const limitTime = new Date(
+      now.getFullYear(),
+      now.getMonth(),
+      now.getDate() + LIMIT_DAYS,
+      0,
+      0,
+      0
+    );
+
     await UserService.updateUser(user.id, { point: diff });
     await AdviceRequestService.updateAdviceRequest(adviceRequestId, {
       status: 'requested',
+      limitTime: Timestamp.fromDate(limitTime),
       requestPoint: trainerUser.requestPoint,
       paymentPoint,
       focusPoint,

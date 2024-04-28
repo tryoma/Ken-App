@@ -115,6 +115,7 @@ export type AdviceRequest = {
   trainerUserId?: string;
   trainingRecordId?: string;
   status: AdviceStatus;
+  limitTime?: Timestamp;
   focusPoint?: string;
   requestPoint?: number;
   paymentPoint?: number;

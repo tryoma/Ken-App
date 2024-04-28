@@ -79,3 +79,11 @@ export const formatTimeAgo = (timestamp: { toDate: () => Date }): string => {
   const years = Math.floor(days / 365);
   return `${years}年前`;
 };
+
+export const formatLastTime = (timestamp: Timestamp | undefined): string => {
+  if (!timestamp) return '';
+  const date = timestamp.toDate(); // Timestamp を Date に変換
+  return `${date.getFullYear()}年${
+    date.getMonth() + 1
+  }月${date.getDate()}日 ${date.getHours()}時`;
+};
