@@ -67,6 +67,18 @@ export const AdviceRequestService = {
     );
   },
 
+  fetchAdviceRequestListForMeSubscribe: (
+    userId: string,
+    status: AdviceStatus,
+    onAdviceRequestUpdate: (adviceRequests: AdviceRequest[]) => void
+  ) => {
+    return AdviceRequestRepository.fetchAdviceRequestListForMeSubscribe(
+      userId,
+      status,
+      onAdviceRequestUpdate
+    );
+  },
+
   fetchAdviceRequestsForMeCount: async (
     trainerUserId: string,
     status: AdviceStatus

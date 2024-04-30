@@ -149,6 +149,33 @@ export const AdviceRequestRepository = {
     return { adviceRequests };
   },
 
+  fetchAdviceRequestListForMeSubscribe: (
+    trainerUserId: string,
+    status: AdviceStatus,
+    onAdviceRequestUpdate: (adviceRequests: AdviceRequest[]) => void
+  ) => {
+    const adviceRequestsRef = collection(db, 'AdviceRequests');
+    const unsubscribe = onSnapshot(
+      query(
+        adviceRequestsRef,
+        where('trainerUserId', '==', trainerUserId),
+        where('status', '==', status)
+      ),
+      snapshot => {
+        const adviceRequests = snapshot.docs.map(
+          doc =>
+            ({
+              id: doc.id,
+              ...doc.data(),
+            } as AdviceRequest)
+        );
+        onAdviceRequestUpdate(adviceRequests);
+      }
+    );
+
+    return unsubscribe;
+  },
+
   fetchAdviceRequestsForMeCount: async (
     trainerUserId: string,
     status: AdviceStatus

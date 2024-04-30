@@ -6,17 +6,26 @@ interface Props {
   adviceRequest: AdviceRequest;
   handleClick: (adviceRequest: AdviceRequest) => void;
   status: AdviceStatus;
+  isTeacher?: boolean;
 }
 
-const UserCard = ({ adviceRequest, handleClick, status }: Props) => {
+const UserCard = ({
+  adviceRequest,
+  handleClick,
+  status,
+  isTeacher = false,
+}: Props) => {
   const { trainerUserId, userId } = adviceRequest;
   const [trainer, setTrainer] = useState<User | null>(null);
+  const [user, setUser] = useState<User | null>(null);
 
   useEffect(() => {
     const fetchData = async () => {
       if (!trainerUserId || !userId) return;
       const trainer = await UserService.fetchUser(trainerUserId);
+      const user = await UserService.fetchUser(userId);
       setTrainer(trainer);
+      setUser(user);
     };
     fetchData();
   }, [trainerUserId, userId]);
@@ -38,7 +47,11 @@ const UserCard = ({ adviceRequest, handleClick, status }: Props) => {
 
   return (
     <tr className="" key={adviceRequest.id}>
-      <td className="border px-4 py-2">{trainer?.name} さんへの依頼</td>
+      <td className="border px-4 py-2">
+        {isTeacher
+          ? `${trainer?.name}さん からの依頼`
+          : `${user?.name}さん への依頼`}
+      </td>
       <td className="border px-4 py-2 text-right">
         <button
           onClick={() => handleClick(adviceRequest)}
