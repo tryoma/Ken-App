@@ -15,12 +15,16 @@ import { UserService } from '@/service/useCase/user.service';
 import { verifyBeforeUpdateEmail } from 'firebase/auth';
 import { FirebaseError } from 'firebase/app';
 import { useToastContext } from '@/context/ToastContext';
+import CropModal from '@/app/components/Modal/CropModal';
 
 const Profile = () => {
   const { userId, user } = useAppContext();
   const showToast = useToastContext();
   const [profileUser, setProfileUser] = useState<User | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
+  const [selectedImage, setSelectedImage] = useState<string | null>(null);
+  const [selectedImageName, setSelectedImageName] = useState('');
+  const [isOpen, setIsOpen] = useState(false);
 
   const {
     register,
@@ -54,13 +58,12 @@ const Profile = () => {
     showToast('プロフィールを更新しました', 'success');
   };
 
-  const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (!e.target.files || e.target.files.length === 0) {
       return;
     }
 
     const file = e.target.files[0];
-
     if (file.size > 1024000) {
       alert('ファイルサイズは1MB以下にしてください');
       return;
@@ -70,11 +73,29 @@ const Profile = () => {
       alert('画像ファイルを選択してください');
       return;
     }
-    const fileRef = ref(storage, 'images/' + file.name);
+    const reader = new FileReader();
 
-    await uploadBytes(fileRef, file);
-    const fileURL = await getDownloadURL(fileRef);
-    setValue('imageUrl', fileURL);
+    reader.onloadend = () => {
+      setSelectedImage(reader.result as string);
+      setSelectedImageName(file.name);
+      setIsOpen(true);
+    };
+
+    if (file) {
+      reader.readAsDataURL(file);
+    }
+  };
+
+  const handleCrop = async (img: string) => {
+    if (selectedImageName) {
+      const fileRef = ref(storage, 'images/' + selectedImageName);
+      const response = await fetch(img);
+      const blob = await response.blob();
+      await uploadBytes(fileRef, blob);
+      const fileURL = await getDownloadURL(fileRef);
+      setValue('imageUrl', fileURL);
+    }
+    setIsOpen(false);
   };
 
   const handleChangeEmail = async () => {
@@ -321,6 +342,14 @@ const Profile = () => {
             </button>
           </div>
         </div>
+        {isOpen && selectedImage && (
+          <CropModal
+            src={selectedImage}
+            size={{ width: 200, height: 200 }}
+            onCrop={handleCrop}
+            onClose={() => setIsOpen(false)}
+          />
+        )}
       </div>
     </>
   );
