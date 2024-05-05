@@ -131,7 +131,7 @@ export type AdviceStatus =
   | 'rejected'
   | 'deleted';
 
-export type PaymentStatus = 'pending' | 'finished' | 'deleted';
+export type PaymentStatus = 'pending' | 'finished' | 'unpaid' | 'deleted';
 
 export interface Price {
   id: string;

@@ -1,4 +1,5 @@
 import * as functions from 'firebase-functions';
+import axios from 'axios';
 import admin from 'firebase-admin';
 
 export const updateStatusAfter5Days = functions
@@ -14,8 +15,19 @@ export const updateStatusAfter5Days = functions
       .where('status', '==', 'requested')
       .where('limitTime', '<=', nowTime)
       .get();
-    console.log({ adviceRequests });
     adviceRequests.forEach(async doc => {
-      await doc.ref.update({ status: 'rejected' });
+      console.log({ data: doc.data() });
+      await doc.ref.update({ status: 'rejected', paymentStatus: 'unpaid' });
+      const userId = doc.data().userId;
+      const paymentPoint = doc.data().paymentPoint;
+      await axios.post(
+        'https://asia-northeast1-ken-app-5926d.cloudfunctions.net/sendEmailAndFcmToUser',
+        { data: { userId } }
+      );
+      const trainerUserId = doc.data().trainerUserId;
+      await axios.post(
+        'https://asia-northeast1-ken-app-5926d.cloudfunctions.net/sendEmailAndFcmToUser',
+        { data: { userId: trainerUserId } }
+      );
     });
   });
