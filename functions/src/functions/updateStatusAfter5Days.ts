@@ -16,18 +16,24 @@ export const updateStatusAfter5Days = functions
       .where('limitTime', '<=', nowTime)
       .get();
     adviceRequests.forEach(async doc => {
-      console.log({ data: doc.data() });
+      const adviceRequest = doc.data();
+      console.log({ adviceRequest });
       await doc.ref.update({ status: 'rejected', paymentStatus: 'unpaid' });
-      const userId = doc.data().userId;
+      const userId = adviceRequest.userId;
       // const paymentPoint = doc.data().paymentPoint;
       await axios.post(
         'https://asia-northeast1-ken-app-5926d.cloudfunctions.net/sendEmailAndFcmToUser',
-        { data: { userId } }
+        { data: { userId, announceType: 'adviceRequestCanceledToUser' } }
       );
-      const trainerUserId = doc.data().trainerUserId;
+      const trainerUserId = adviceRequest.trainerUserId;
       await axios.post(
         'https://asia-northeast1-ken-app-5926d.cloudfunctions.net/sendEmailAndFcmToUser',
-        { data: { userId: trainerUserId } }
+        {
+          data: {
+            userId: trainerUserId,
+            announceType: 'adviceRequestCanceledToUser',
+          },
+        }
       );
     });
   });

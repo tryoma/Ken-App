@@ -1,6 +1,8 @@
 import * as functions from 'firebase-functions';
 import admin from 'firebase-admin';
 import * as nodemailer from 'nodemailer';
+import { contents } from './contents';
+import { AdviceRequest, AnnounceType, Content } from '../type';
 // import logger from '../logger';
 
 // nodemailerの設定
@@ -12,15 +14,21 @@ const mailTransport = nodemailer.createTransport({
   },
 });
 
+interface Data {
+  userId: string;
+  announceType: AnnounceType;
+  adviceRequest: AdviceRequest;
+}
+
 export const sendEmailAndFcmToUser = functions
   .region('asia-northeast1')
-  .https.onCall(async (data, context) => {
-    const userId = data.userId;
+  .https.onCall(async (data: Data, context) => {
+    const { userId, announceType, adviceRequest } = data;
     console.log('userId:', userId);
-    if (!userId)
+    if (!userId || !announceType)
       throw new functions.https.HttpsError(
         'invalid-argument',
-        'The function must be called with one argument "userId".'
+        'The function must be called with arguments.'
       );
 
     try {
@@ -37,12 +45,19 @@ export const sendEmailAndFcmToUser = functions
       }
       const userData = user.data();
       const fcmToken = userData?.fcmToken; // FCM送信用にユーザーのFCMトークンを取得
+      const content = contents.find(
+        content => content.announceType === announceType
+      );
+      const { subject, body } = await createSubjectAndBody(
+        content,
+        adviceRequest
+      );
       // メール送信
       const mailOptions = {
         from: functions.config().gmail.email,
         to: email,
-        subject: 'メールの件名',
-        text: 'メールの本文',
+        subject,
+        text: content?.emailBody,
       };
       await mailTransport.sendMail(mailOptions);
       // logger.info('メール送信成功:', email);
@@ -52,8 +67,9 @@ export const sendEmailAndFcmToUser = functions
         // FCM送信
         const message = {
           notification: {
-            title: '通知のタイトル',
-            body: '通知の本文',
+            title: content?.fcmTitle,
+            body,
+            click_action: content?.fcmClickAction,
           },
           token: fcmToken,
         };
@@ -75,3 +91,33 @@ export const sendEmailAndFcmToUser = functions
       );
     }
   });
+
+const createSubjectAndBody = async (
+  content: Content | undefined,
+  adviceRequest: AdviceRequest
+) => {
+  if (!content) return { subject: '', body: '' };
+  let subject = content.emailSubject;
+  let body = content.emailBody;
+  const requestPoint = adviceRequest.requestPoint || 0;
+  const userName = await fetchUserName(adviceRequest.userId);
+  const trainerName = await fetchUserName(adviceRequest.trainerUserId);
+  subject = subject
+    .replace('【依頼者の名前】', userName)
+    .replace('【トレーナーの名前】', trainerName)
+    .replace('【ポイント】', requestPoint.toString());
+  body = body
+    .replace('【依頼者の名前】', userName)
+    .replace('【トレーナーの名前】', trainerName)
+    .replace('【ポイント】', requestPoint.toString());
+  return { subject, body };
+};
+
+const fetchUserName = async (userId: string | undefined) => {
+  if (!userId) return '';
+  const user = await admin.firestore().collection('Users').doc(userId).get();
+  if (!user.exists) {
+    throw new Error('User not found');
+  }
+  return user.data()?.name as string;
+};
