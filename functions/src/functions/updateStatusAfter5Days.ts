@@ -20,10 +20,10 @@ export const updateStatusAfter5Days = functions
       const userId = adviceRequest.userId;
       const trainerUserId = adviceRequest.trainerUserId;
       const user = await fetchUser(userId);
-      if (!user) {
+      if (!user || !user.data) {
         return;
       }
-      const newPoint = user.point + adviceRequest.paymentPoint;
+      const newPoint = user.data.point + adviceRequest.paymentPoint;
       await user.ref.update({ point: newPoint });
       await createReturnPointHistory(
         userId,
@@ -66,11 +66,11 @@ export const updateStatusAfter5Days = functions
   });
 
 const fetchUser = async (userId: string) => {
-  const user = await admin.firestore().collection('Users').doc(userId).get();
-  if (!user.exists) {
+  const userDoc = await admin.firestore().collection('Users').doc(userId).get();
+  if (!userDoc.exists) {
     throw new Error('User not found');
   }
-  return user.data();
+  return { data: userDoc.data(), ref: userDoc.ref };
 };
 
 const createReturnPointHistory = async (
