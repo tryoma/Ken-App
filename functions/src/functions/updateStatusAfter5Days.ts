@@ -42,7 +42,7 @@ export const updateStatusAfter5Days = functions
           {
             data: {
               userId: trainerUserId,
-              announceType: 'adviceRequestCanceledToUser',
+              announceType: 'adviceRequestCanceledToTrainer',
               adviceRequest,
             },
           }
