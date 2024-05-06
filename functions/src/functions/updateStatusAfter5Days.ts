@@ -27,10 +27,7 @@ export const updateStatusAfter5Days = functions
       const newPoint = user.data.point + adviceRequest.paymentPoint;
       await user.ref.update({ point: newPoint });
       console.log({ adviceRequest });
-      await createReturnPointHistory(
-        userId,
-        adviceRequest.paymentPoint
-      );
+      await createReturnPointHistory(userId, adviceRequest.paymentPoint);
       await createNotification(userId);
       await createNotification(trainerUserId);
       await doc.ref.update({ status: 'rejected', paymentStatus: 'unpaid' });
@@ -74,14 +71,12 @@ const fetchUser = async (userId: string) => {
   return { data: userDoc.data(), ref: userDoc.ref };
 };
 
-const createReturnPointHistory = async (
-  userId: string,
-  point: number,
-) => {
+const createReturnPointHistory = async (userId: string, point: number) => {
   await admin.firestore().collection('PointHistories').add({
     userId,
     point,
     historyType: 'return',
+    createdAt: admin.firestore.Timestamp.now(),
   });
 };
 
@@ -90,5 +85,6 @@ const createNotification = async (userId: string) => {
     type: 'individual',
     userId,
     message: 'アドバイス依頼がキャンセルされました',
+    createdAt: admin.firestore.Timestamp.now(),
   });
 };
