@@ -69,7 +69,7 @@ export const sendEmailAndFcmToUser = functions
           notification: {
             title: content?.fcmTitle,
             body,
-            click_action: content?.fcmClickAction,
+            clickAction: content?.fcmClickAction,
           },
           token: fcmToken,
         };
