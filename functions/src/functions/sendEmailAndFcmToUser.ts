@@ -69,6 +69,9 @@ export const sendEmailAndFcmToUser = functions
           notification: {
             title: content?.fcmTitle,
             body: fcmBody,
+            fcmOptions: {
+              link: content?.fcmClickAction,
+            },
           },
           webpush: {
             fcmOptions: {
