@@ -95,6 +95,7 @@ export type Notification = {
   message?: string;
   createdAt?: Timestamp;
   type?: NotificationType;
+  userId: string;
 };
 
 export type NotificationType = 'all' | 'individual';
@@ -158,7 +159,7 @@ export type PointHistory = {
   createdAt?: Timestamp;
 };
 
-export type historyType = 'use' | 'get' | 'add' | 'purchase';
+export type historyType = 'use' | 'get' | 'add' | 'purchase' | 'return';
 
 export type Thumbnail = {
   commonKey: string;
