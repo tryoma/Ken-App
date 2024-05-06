@@ -23,9 +23,8 @@ export const updateStatusAfter5Days = functions
       if (!user) {
         return;
       }
-      await user.ref.update({
-        point: admin.firestore.FieldValue.increment(adviceRequest.paymentPoint),
-      });
+      const newPoint = user.point + adviceRequest.paymentPoint;
+      await user.ref.update({ point: newPoint });
       await createReturnPointHistory(
         userId,
         adviceRequest.paymentPoint,
