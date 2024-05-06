@@ -29,8 +29,7 @@ export const updateStatusAfter5Days = functions
       console.log({ adviceRequest });
       await createReturnPointHistory(
         userId,
-        adviceRequest.paymentPoint,
-        adviceRequest.id
+        adviceRequest.paymentPoint
       );
       await createNotification(userId);
       await createNotification(trainerUserId);
@@ -78,12 +77,10 @@ const fetchUser = async (userId: string) => {
 const createReturnPointHistory = async (
   userId: string,
   point: number,
-  adviceRequestId: string
 ) => {
   await admin.firestore().collection('PointHistories').add({
     userId,
     point,
-    adviceRequestId,
     historyType: 'return',
   });
 };
