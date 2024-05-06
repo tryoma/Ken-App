@@ -4,7 +4,7 @@ import admin from 'firebase-admin';
 
 export const updateStatusAfter5Days = functions
   .region('asia-northeast1')
-  .pubsub.schedule('*/2 * * * *')
+  .pubsub.schedule('0 0 * * *')
   .timeZone('Asia/Tokyo')
   .onRun(async context => {
     const nowTime = admin.firestore.Timestamp.now();
@@ -15,7 +15,6 @@ export const updateStatusAfter5Days = functions
       .where('status', '==', 'requested')
       .where('limitTime', '<=', nowTime)
       .get();
-    console.log({ adviceRequests });
     adviceRequests.forEach(async doc => {
       const adviceRequest = doc.data();
       const userId = adviceRequest.userId;
@@ -24,10 +23,9 @@ export const updateStatusAfter5Days = functions
       if (!user || !user.data || adviceRequest.paymentStatus != 'pending') {
         return;
       }
-      const newPoint = user.data.point + adviceRequest.paymentPoint;
+      const newPoint = user.data.point + adviceRequest.requestPoint;
       await user.ref.update({ point: newPoint });
-      console.log({ adviceRequest });
-      await createReturnPointHistory(userId, adviceRequest.paymentPoint);
+      await createReturnPointHistory(userId, adviceRequest.requestPoint);
       await createNotification(userId);
       await createNotification(trainerUserId);
       await doc.ref.update({ status: 'rejected', paymentStatus: 'unpaid' });
