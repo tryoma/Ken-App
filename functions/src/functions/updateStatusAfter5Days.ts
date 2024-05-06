@@ -21,19 +21,27 @@ export const updateStatusAfter5Days = functions
       await doc.ref.update({ status: 'rejected', paymentStatus: 'unpaid' });
       const userId = adviceRequest.userId;
       // const paymentPoint = doc.data().paymentPoint;
-      await axios.post(
-        'https://asia-northeast1-ken-app-5926d.cloudfunctions.net/sendEmailAndFcmToUser',
-        { data: { userId, announceType: 'adviceRequestCanceledToUser' } }
-      );
+      await axios
+        .post(
+          'https://asia-northeast1-ken-app-5926d.cloudfunctions.net/sendEmailAndFcmToUser',
+          { data: { userId, announceType: 'adviceRequestCanceledToUser' } }
+        )
+        .catch(error => {
+          console.error(error);
+        });
       const trainerUserId = adviceRequest.trainerUserId;
-      await axios.post(
-        'https://asia-northeast1-ken-app-5926d.cloudfunctions.net/sendEmailAndFcmToUser',
-        {
-          data: {
-            userId: trainerUserId,
-            announceType: 'adviceRequestCanceledToUser',
-          },
-        }
-      );
+      await axios
+        .post(
+          'https://asia-northeast1-ken-app-5926d.cloudfunctions.net/sendEmailAndFcmToUser',
+          {
+            data: {
+              userId: trainerUserId,
+              announceType: 'adviceRequestCanceledToUser',
+            },
+          }
+        )
+        .catch(error => {
+          console.error(error);
+        });
     });
   });

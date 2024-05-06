@@ -99,6 +99,7 @@ const createSubjectAndBody = async (
   if (!content) return { subject: '', body: '' };
   let subject = content.emailSubject;
   let body = content.emailBody;
+  console.log('adviceRequest:', adviceRequest);
   const requestPoint = adviceRequest.requestPoint || 0;
   const userName = await fetchUserName(adviceRequest.userId);
   const trainerName = await fetchUserName(adviceRequest.trainerUserId);
