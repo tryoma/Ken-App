@@ -95,6 +95,7 @@ export type Notification = {
   message?: string;
   createdAt?: Timestamp;
   type?: NotificationType;
+  userId?: string;
 };
 
 export type NotificationType = 'all' | 'individual';
