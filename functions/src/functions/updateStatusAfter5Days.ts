@@ -33,7 +33,7 @@ export const updateStatusAfter5Days = functions
           }
         )
         .catch(error => {
-          console.error(error);
+          console.error({error1: error});
         });
       const trainerUserId = adviceRequest.trainerUserId;
       await axios
@@ -48,7 +48,7 @@ export const updateStatusAfter5Days = functions
           }
         )
         .catch(error => {
-          console.error(error);
+          console.error({error2: error});
         });
     });
   });
