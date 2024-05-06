@@ -61,6 +61,8 @@ const PointHistory = () => {
         return '利用';
       case 'get':
         return '回答';
+      case 'return':
+        return '返金';
       default:
         return '不明';
     }
