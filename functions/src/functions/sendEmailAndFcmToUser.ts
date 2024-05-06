@@ -25,7 +25,7 @@ export const sendEmailAndFcmToUser = functions
   .https.onCall(async (data: Data, context) => {
     const { userId, announceType, adviceRequest } = data;
     console.log('userId:', userId);
-    if (!userId || !announceType)
+    if (!userId || !announceType || !adviceRequest)
       throw new functions.https.HttpsError(
         'invalid-argument',
         'The function must be called with arguments.'

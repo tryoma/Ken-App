@@ -24,7 +24,13 @@ export const updateStatusAfter5Days = functions
       await axios
         .post(
           'https://asia-northeast1-ken-app-5926d.cloudfunctions.net/sendEmailAndFcmToUser',
-          { data: { userId, announceType: 'adviceRequestCanceledToUser' } }
+          {
+            data: {
+              userId,
+              announceType: 'adviceRequestCanceledToUser',
+              adviceRequest,
+            },
+          }
         )
         .catch(error => {
           console.error(error);
@@ -37,6 +43,7 @@ export const updateStatusAfter5Days = functions
             data: {
               userId: trainerUserId,
               announceType: 'adviceRequestCanceledToUser',
+              adviceRequest,
             },
           }
         )
