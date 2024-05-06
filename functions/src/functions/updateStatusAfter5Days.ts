@@ -15,12 +15,13 @@ export const updateStatusAfter5Days = functions
       .where('status', '==', 'requested')
       .where('limitTime', '<=', nowTime)
       .get();
+    console.log({ adviceRequests });
     adviceRequests.forEach(async doc => {
       const adviceRequest = doc.data();
       const userId = adviceRequest.userId;
       const trainerUserId = adviceRequest.trainerUserId;
       const user = await fetchUser(userId);
-      if (!user || !user.data) {
+      if (!user || !user.data || adviceRequest.paymentStatus != 'pending') {
         return;
       }
       const newPoint = user.data.point + adviceRequest.paymentPoint;
