@@ -48,7 +48,7 @@ export const sendEmailAndFcmToUser = functions
       const content = contents.find(
         content => content.announceType === announceType
       );
-      const { subject, body } = await createSubjectAndBody(
+      const { emailBody, fcmBody } = await createSubjectAndBody(
         content,
         adviceRequest
       );
@@ -56,8 +56,8 @@ export const sendEmailAndFcmToUser = functions
       const mailOptions = {
         from: functions.config().gmail.email,
         to: email,
-        subject,
-        text: content?.emailBody,
+        subject: content?.emailSubject,
+        text: emailBody,
       };
       await mailTransport.sendMail(mailOptions);
       // logger.info('メール送信成功:', email);
@@ -68,7 +68,7 @@ export const sendEmailAndFcmToUser = functions
         const message = {
           notification: {
             title: content?.fcmTitle,
-            body,
+            body: fcmBody,
             clickAction: content?.fcmClickAction,
           },
           token: fcmToken,
@@ -97,21 +97,21 @@ const createSubjectAndBody = async (
   adviceRequest: AdviceRequest
 ) => {
   if (!content) return { subject: '', body: '' };
-  let subject = content.emailSubject;
-  let body = content.emailBody;
+  let fcmBody = content.fcmBody;
+  let emailBody = content.emailBody;
   console.log('adviceRequest:', adviceRequest);
   const requestPoint = adviceRequest.requestPoint || 0;
   const userName = await fetchUserName(adviceRequest.userId);
   const trainerName = await fetchUserName(adviceRequest.trainerUserId);
-  subject = subject
+  fcmBody = fcmBody
     .replace('【依頼者の名前】', userName)
     .replace('【トレーナーの名前】', trainerName)
     .replace('【ポイント】', requestPoint.toString());
-  body = body
+  emailBody = emailBody
     .replace('【依頼者の名前】', userName)
     .replace('【トレーナーの名前】', trainerName)
     .replace('【ポイント】', requestPoint.toString());
-  return { subject, body };
+  return { fcmBody, emailBody };
 };
 
 const fetchUserName = async (userId: string | undefined) => {
