@@ -25,6 +25,7 @@ export const updateStatusAfter5Days = functions
       }
       const newPoint = user.data.point + adviceRequest.paymentPoint;
       await user.ref.update({ point: newPoint });
+      console.log({ adviceRequest });
       await createReturnPointHistory(
         userId,
         adviceRequest.paymentPoint,
