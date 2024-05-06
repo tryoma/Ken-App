@@ -4,7 +4,7 @@ import admin from 'firebase-admin';
 
 export const updateStatusAfter5Days = functions
   .region('asia-northeast1')
-  .pubsub.schedule('0 0 * * *')
+  .pubsub.schedule('*/2 * * * *')
   .timeZone('Asia/Tokyo')
   .onRun(async context => {
     const nowTime = admin.firestore.Timestamp.now();
