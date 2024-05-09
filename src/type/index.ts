@@ -6,6 +6,7 @@ export type User = {
   name: string;
   bio?: string;
   isTrainer: boolean;
+  isAdmin?: boolean;
   imageUrl?: string;
   point?: number;
   requestPoint?: number;

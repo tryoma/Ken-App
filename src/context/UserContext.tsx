@@ -17,12 +17,14 @@ type UserProviderProps = {
 
 type UserContextType = {
   user: User | null;
+  isAdmin: boolean;
   setUser: React.Dispatch<React.SetStateAction<User | null>>;
 };
 
 const defalutContextData = {
   user: null,
-  setUser: () => {}
+  isAdmin: false,
+  setUser: () => {},
 };
 
 const UserContext = createContext<UserContextType>(defalutContextData);
@@ -30,15 +32,21 @@ const UserContext = createContext<UserContextType>(defalutContextData);
 export function UserProvider({ children }: UserProviderProps) {
   const { userId } = useAppContext();
   const [user, setUser] = useState<User | null>(null);
+  const [isAdmin, setIsAdmin] = useState(false);
+
+  const setUserAndAdmin = (user: User | null) => {
+    setUser(user);
+    setIsAdmin(user?.isAdmin || false);
+  };
 
   useEffect(() => {
     if (!userId) return;
-    const unsubscribe = UserService.fetchUserSubscribe(userId, setUser);
+    const unsubscribe = UserService.fetchUserSubscribe(userId, setUserAndAdmin);
 
     return () => unsubscribe();
   }, [userId]);
 
-  if (!user){
+  if (!user) {
     return null;
   }
 
@@ -46,7 +54,8 @@ export function UserProvider({ children }: UserProviderProps) {
     <UserContext.Provider
       value={{
         user,
-        setUser
+        setUser,
+        isAdmin,
       }}
     >
       {children}

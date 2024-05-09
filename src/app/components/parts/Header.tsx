@@ -5,7 +5,6 @@ import Link from 'next/link';
 import { useEffect, useState } from 'react';
 import { auth } from '../../../../firebase';
 import { useAppContext } from '@/context/AppContext';
-import { User } from '@/type';
 import UserIconAndName from './UserIconAndName';
 import { NotificationService } from '@/service/useCase/notification.service';
 import { useUserContext } from '@/context/UserContext';
