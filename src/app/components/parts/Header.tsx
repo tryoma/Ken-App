@@ -11,7 +11,7 @@ import { NotificationService } from '@/service/useCase/notification.service';
 import { useUserContext } from '@/context/UserContext';
 
 const Header = () => {
-  const { userId, settingChangeFlag } = useAppContext();
+  const { userId } = useAppContext();
   const { user } = useUserContext();
   const [isSettingsOpen, setIsSettingsOpen] = useState(false);
   const [isSideBarOpen, setIsSideBarOpen] = useState(true);
@@ -24,7 +24,7 @@ const Header = () => {
       setNotWatchNotificationCount(count);
     };
     fetchData();
-  }, [userId, settingChangeFlag]);
+  }, [userId]);
 
   const handleSettingsClick = () => {
     setIsSettingsOpen(!isSettingsOpen);

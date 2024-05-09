@@ -27,7 +27,7 @@ const defalutContextData = {
 
 const UserContext = createContext<UserContextType>(defalutContextData);
 
-export function UserProvider({ children }: UserProviderProps) {
+export function AdminProvider({ children }: UserProviderProps) {
   const { userId } = useAppContext();
   const [user, setUser] = useState<User | null>(null);
 
@@ -37,10 +37,6 @@ export function UserProvider({ children }: UserProviderProps) {
 
     return () => unsubscribe();
   }, [userId]);
-
-  if (!user){
-    return null;
-  }
 
   return (
     <UserContext.Provider

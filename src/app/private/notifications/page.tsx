@@ -13,7 +13,7 @@ import {
 
 const Notifications = () => {
   const showToast = useToastContext();
-  const { userId, settingChangeFlag, setSettingChangeFlag } = useAppContext();
+  const { userId } = useAppContext();
   const [notifications, setNotifications] = useState<ExtendedNotification[]>(
     []
   );
@@ -50,7 +50,6 @@ const Notifications = () => {
       )
     );
     showToast('お知らせを既読にしました', 'success');
-    setSettingChangeFlag(!settingChangeFlag);
   };
 
   return (

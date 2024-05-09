@@ -10,6 +10,7 @@ import {
 } from 'react';
 import { auth } from '../../firebase';
 import { useRouter } from 'next/navigation';
+import Loading from '@/app/components/Loading';
 
 type AppProviderProps = {
   children: ReactNode;
@@ -20,12 +21,6 @@ type AppContextType = {
   userId: string | null;
   setUser: React.Dispatch<React.SetStateAction<User | null>>;
   isLoading: boolean;
-  selectedRoom: string | null;
-  setSelectedRoom: React.Dispatch<React.SetStateAction<string | null>>;
-  selectRoomName: string | null;
-  setSelectRoomName: React.Dispatch<React.SetStateAction<string | null>>;
-  settingChangeFlag: boolean;
-  setSettingChangeFlag: React.Dispatch<React.SetStateAction<boolean>>;
 };
 
 const defalutContextData = {
@@ -33,12 +28,6 @@ const defalutContextData = {
   userId: null,
   setUser: () => {},
   isLoading: true,
-  selectedRoom: null,
-  setSelectedRoom: () => {},
-  selectRoomName: null,
-  setSelectRoomName: () => {},
-  settingChangeFlag: false,
-  setSettingChangeFlag: () => {},
 };
 
 const AppContext = createContext<AppContextType>(defalutContextData);
@@ -47,9 +36,6 @@ export function AppProvider({ children }: AppProviderProps) {
   const [user, setUser] = useState<User | null>(null);
   const [userId, setUserId] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(true);
-  const [selectedRoom, setSelectedRoom] = useState<string | null>(null);
-  const [selectRoomName, setSelectRoomName] = useState<string | null>(null);
-  const [settingChangeFlag, setSettingChangeFlag] = useState(false);
   const router = useRouter();
 
   useEffect(() => {
@@ -69,6 +55,10 @@ export function AppProvider({ children }: AppProviderProps) {
     };
   }, []);
 
+  if (isLoading) {
+    return <Loading />;
+  }
+
   return (
     <AppContext.Provider
       value={{
@@ -76,12 +66,6 @@ export function AppProvider({ children }: AppProviderProps) {
         userId,
         setUser,
         isLoading,
-        selectedRoom,
-        setSelectedRoom,
-        selectRoomName,
-        setSelectRoomName,
-        settingChangeFlag,
-        setSettingChangeFlag,
       }}
     >
       {children}
