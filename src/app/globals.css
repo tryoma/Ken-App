@@ -3,5 +3,14 @@
 @tailwind utilities;
 
 body {
+  /* ライトモード時の背景色 */
   background-color: #e3e9fc;
+  @apply text-custom-black;
 }
+
+/* @media (prefers-color-scheme: dark) {
+  body {
+    @apply bg-custom-blue;
+    @apply text-custom-white;
+  }
+} */

@@ -22,7 +22,7 @@ const UserIconAndName = ({ user }: Props) => {
         className="rounded-full w-1/12"
       />
       <div className="ml-1 truncate w-6/12 m-auto">{user.name ?? '未設定'}</div>
-      <div className="m-auto" onClick={() => router.push('/private/admin')}>
+      <div className="m-auto cursor-pointer" onClick={() => router.push('/private/admin')}>
         {user.isAdmin && <AdminIcon />}
       </div>
       <span className="ml-2 text-xs m-auto w-5/12">

@@ -1,6 +1,14 @@
-import { NotificationType } from '@/type';
+import { Notification, NotificationType } from '@/type';
 import { db } from '../../../firebase';
-import { collection, getDocs, query, where } from 'firebase/firestore';
+import {
+  collection,
+  getDocs,
+  onSnapshot,
+  or,
+  orderBy,
+  query,
+  where,
+} from 'firebase/firestore';
 
 export const NotificationRepository = {
   fetchNotificationsByType: async (
@@ -32,5 +40,21 @@ export const NotificationRepository = {
     );
     const snapshot = await getDocs(readQuery);
     return snapshot.docs.map(doc => doc.data().notificationId);
+  },
+
+  fetchNotificationsSubscribe: (
+    onNotifications: (notifications: Notification[]) => void
+  ) => {
+    const notificationsRef = collection(db, 'Notifications');
+    const notificationsQuery = query(notificationsRef, orderBy('createdAt'));
+    const unsubscribe = onSnapshot(notificationsQuery, snapshot => {
+      const notifications = snapshot.docs.map(doc => ({
+        id: doc.id,
+        ...doc.data(),
+      }));
+      onNotifications(notifications);
+    });
+
+    return unsubscribe;
   },
 };

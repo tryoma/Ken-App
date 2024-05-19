@@ -166,3 +166,10 @@ export type Thumbnail = {
   commonKey: string;
   thumbnailUrl: string;
 };
+
+export type ContentMap = {
+  Notifications: Notification;
+  Users: User;
+};
+
+export type ContentType = keyof ContentMap;

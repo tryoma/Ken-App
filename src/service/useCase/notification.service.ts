@@ -1,5 +1,5 @@
 // NotificationService.ts
-import { ExtendedNotification } from '@/type';
+import { ExtendedNotification, Notification } from '@/type';
 import { NotificationRepository } from '../repository';
 
 export const NotificationService = {
@@ -45,5 +45,11 @@ export const NotificationService = {
       await NotificationRepository.fetchReadNotificationIds(userId);
 
     return combinedNotifications.length - readNotificationIds.length;
+  },
+
+  fetchNotificationsSubscribe: (
+    onNotifications: (notifications: Notification[]) => void
+  ) => {
+    return NotificationRepository.fetchNotificationsSubscribe(onNotifications);
   },
 };
